@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Coffee Mission Control</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,Arial,sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#0f172a,#1e3a8a);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+
+}
+
+.card{
+
+width:650px;
+background:white;
+border-radius:20px;
+padding:30px;
+box-shadow:0 20px 60px rgba(0,0,0,.3);
+
+}
+
+h1{
+
+text-align:center;
+color:#1e3a8a;
+
+}
+
+.subtitle{
+
+text-align:center;
+color:#666;
+margin-bottom:25px;
+
+}
+
+.status{
+
+background:#eef4ff;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+line-height:1.8;
+
+}
+
+button{
+
+padding:14px 25px;
+font-size:16px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+transition:.3s;
+
+}
+
+#coffee{
+
+background:#6f4e37;
+color:white;
+width:100%;
+
+}
+
+#coffee:hover{
+
+transform:scale(1.02);
+
+}
+
+.choice{
+
+display:flex;
+gap:15px;
+margin-top:20px;
+
+}
+
+.go{
+
+flex:1;
+background:#16a34a;
+color:white;
+
+}
+
+.iwas{
+
+flex:1;
+background:#dc2626;
+color:white;
+
+}
+
+button:hover{
+
+opacity:.9;
+
+}
+
+#loading{
+
+margin-top:25px;
+font-size:22px;
+font-weight:bold;
+text-align:center;
+color:#2563eb;
+
+}
+
+#result{
+
+margin-top:20px;
+background:#f8fafc;
+padding:20px;
+border-radius:12px;
+display:none;
+font-size:18px;
+line-height:1.8;
+
+}
+
+.footer{
+
+margin-top:20px;
+text-align:center;
+font-size:13px;
+color:gray;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>☕ COFFEE MISSION CONTROL</h1>
+
+<div class="subtitle">
+
+Internal Emotional Decision Support System v1.0
+
+</div>
+
+<div class="status">
+
+<b>Target :</b> Cherielyn Gregorio<br>
+<b>Status :</b> Online (?)<br>
+<b>Courage Level :</b> Unknown<br>
+<b>Mission :</b> Decide wisely 😂
+
+</div>
+
+<button id="coffee">
+
+☕ START COFFEE MISSION
+
+</button>
+
+<div class="choice" id="choices" style="display:none;">
+
+<button class="go">
+
+😎 GO
+
+</button>
+
+<button class="iwas">
+
+🙈 IWAS
+
+</button>
+
+</div>
+
+<div id="loading"></div>
+
+<div id="result"></div>
+
+<div class="footer">
+
+Powered by Coffee Engine™ | Emotional AI Disabled 😂
+
+</div>
+
+</div>
+
+<script>
+
+const coffee=document.getElementById("coffee");
+
+const choices=document.getElementById("choices");
+
+const loading=document.getElementById("loading");
+
+const result=document.getElementById("result");
+
+coffee.onclick=function(){
+
+choices.style.display="flex";
+
+coffee.disabled=true;
+
+coffee.innerHTML="MISSION INITIALIZED";
+
+}
+
+document.querySelector(".go").onclick=function(){
+
+loading.style.display="block";
+
+result.style.display="none";
+
+let percent=0;
+
+loading.innerHTML="Loading Courage... 0%";
+
+let timer=setInterval(function(){
+
+percent+=10;
+
+loading.innerHTML="Loading Courage... "+percent+"%";
+
+if(percent>=100){
+
+clearInterval(timer);
+
+loading.innerHTML="";
+
+result.style.display="block";
+
+result.innerHTML=`
+
+<h2 style="color:green;">✅ Mission Approved</h2>
+
+<hr><br>
+
+📡 Connection Established.<br><br>
+
+☕ Recommendation:<br>
+
+<b>"Smile. Say Hi. Mention Coffee."</b><br><br>
+
+💬 Suggested Line:<br>
+
+<i>"Good morning Ma'am! Coffee later? 😄"</i>
+
+<br><br>
+
+🎖 Confidence Bonus : +100
+
+<br>
+
+❤️ Chance of making someone smile : Increased.
+
+`;
+
+}
+
+},180);
+
+}
+
+document.querySelector(".iwas").onclick=function(){
+
+loading.style.display="block";
+
+result.style.display="none";
+
+let percent=0;
+
+loading.innerHTML="Calculating Escape Route...";
+
+let timer=setInterval(function(){
+
+percent+=10;
+
+loading.innerHTML="Calculating Escape Route... "+percent+"%";
+
+if(percent>=100){
+
+clearInterval(timer);
+
+loading.innerHTML="";
+
+result.style.display="block";
+
+result.innerHTML=`
+
+<h2 style="color:red;">❌ Mission Cancelled</h2>
+
+<hr><br>
+
+System detected another successful escape. 😂
+
+<br><br>
+
+Reason:
+
+<ul>
+
+<li>Insufficient Courage</li>
+
+<li>High Level of Shyness</li>
+
+<li>Coffee Left Unserved</li>
+
+<li>Future Regret Probability: 98%</li>
+
+</ul>
+
+<br>
+
+🤖 AI Suggestion:
+
+<b>"Next attempt after drinking your own coffee."</b>
+
+`;
+
+}
+
+},180);
+
+}
+
+</script>
+
+</body>
+</html>

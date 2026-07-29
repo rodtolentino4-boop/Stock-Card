@@ -1,350 +1,5202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Management System</title>
 
-<title>Coffee Mission Control</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <style>
+
+
+:root{
+
+--primary:#003366;
+--primary2:#0D6EFD;
+--secondary:#F4F7FB;
+
+--white:#FFFFFF;
+
+--success:#198754;
+--warning:#FFC107;
+--danger:#DC3545;
+
+--text:#1F2937;
+--muted:#6B7280;
+
+--border:#D9E2EC;
+
+--shadow:
+0 8px 20px rgba(0,0,0,.08);
+
+--radius:14px;
+
+--transition:.25s;
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Segoe UI,Arial,sans-serif;
+font-family:Arial;
 }
+
 
 body{
 
-background:linear-gradient(135deg,#0f172a,#1e3a8a);
+margin:0;
+padding:0;
+
+background:#eef3f9;
+
+font-family:
+"Segoe UI",
+Tahoma,
+sans-serif;
+
+color:var(--text);
+
+overflow-x:hidden;
+
+}
+
+
+
+.sidebar{
+
+position:fixed;
+
+left:0;
+top:0;
+
+width:255px;
 height:100vh;
+
+background:
+linear-gradient(
+180deg,
+#002B5C,
+#003D82,
+#0056B3);
+
+color:white;
+
+padding:25px 18px;
+
+box-shadow:
+8px 0 20px rgba(0,0,0,.15);
+
+overflow-y:auto;
+
+}
+
+
+
+
+
+
+
+
+
+.sidebar h2{
+
+text-align:center;
+
+font-size:22px;
+
+margin-bottom:30px;
+
+padding-bottom:15px;
+
+border-bottom:1px solid rgba(255,255,255,.2);
+
+letter-spacing:1px;
+
+}
+
+.sidebar ul{
+list-style:none;
+}
+
+
+.sidebar li{
+
 display:flex;
-justify-content:center;
+
 align-items:center;
 
-}
+gap:12px;
 
-.card{
+padding:14px 16px;
 
-width:650px;
-background:white;
-border-radius:20px;
-padding:30px;
-box-shadow:0 20px 60px rgba(0,0,0,.3);
+margin-bottom:10px;
 
-}
-
-h1{
-
-text-align:center;
-color:#1e3a8a;
-
-}
-
-.subtitle{
-
-text-align:center;
-color:#666;
-margin-bottom:25px;
-
-}
-
-.status{
-
-background:#eef4ff;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-line-height:1.8;
-
-}
-
-button{
-
-padding:14px 25px;
-font-size:16px;
-border:none;
 border-radius:10px;
+
 cursor:pointer;
+
+transition:.25s;
+
+font-weight:500;
+
+}
+
+
+
+
+
+
+
+.sidebar li:hover{
+
+background:white;
+
+color:#003366;
+
+transform:translateX(6px);
+
+box-shadow:
+
+0 5px 15px
+rgba(0,0,0,.15);
+
+}
+
+
+
+
+
+.sidebar li.active{
+
+background:white;
+
+color:#003366;
+
+border-left:5px solid #0D6EFD;
+
+font-weight:bold;
+
+}
+
+
+
+.main{
+
+margin-left:255px;
+
+padding:25px;
+
+width:calc(100% - 255px);
+
 transition:.3s;
 
 }
 
-#coffee{
 
-background:#6f4e37;
-color:white;
-width:100%;
 
-}
 
-#coffee:hover{
 
-transform:scale(1.02);
 
-}
-
-.choice{
+.header-left{
 
 display:flex;
-gap:15px;
-margin-top:20px;
+
+align-items:center;
+
+gap:18px;
 
 }
 
-.go{
+.logo-box{
 
-flex:1;
-background:#16a34a;
+width:65px;
+
+height:65px;
+
+border-radius:50%;
+
+background:#003366;
+
 color:white;
 
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:28px;
+
+box-shadow:0 6px 15px rgba(0,0,0,.18);
+
 }
 
-.iwas{
 
-flex:1;
-background:#dc2626;
-color:white;
+
+
+
+
+
+
+
+
+
+
+
+.header-left h2{
+
+margin:0;
+
+font-size:22px;
 
 }
 
-button:hover{
+.header-left small{
+
+opacity:.9;
+
+font-size:13px;
+
+}
+
+.header-right{
+
+display:flex;
+
+align-items:center;
+
+gap:20px;
+
+}
+
+.header-right small{
+
+font-size:13px;
 
 opacity:.9;
 
 }
 
-#loading{
+
+
+
+
+
+
+
+
+
+margin-left:230px;
+width:100%;
+padding:25px;
+
+}
+
+
+.cards{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(240px,1fr));
+
+gap:22px;
+
+margin-bottom:30px;
+
+}
+
+
+.card{
+
+background:white;
+
+border-radius:18px;
+
+padding:24px;
+
+box-shadow:0 10px 24px rgba(0,0,0,.08);
+
+border:1px solid #e5edf6;
+
+transition:.3s;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.card::before{
+
+content:"";
+
+position:absolute;
+
+left:0;
+
+top:0;
+
+width:6px;
+
+height:100%;
+
+background:#0D6EFD;
+
+}
+
+
+.card:hover{
+
+transform:translateY(-8px);
+
+box-shadow:
+
+0 20px 40px rgba(0,0,0,.15);
+
+}
+
+
+
+
+.card h1{
+
+margin-top:10px;
+color:#0b5ed7;
+
+}
+
+
+.toolbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+flex-wrap:wrap;
+
+gap:15px;
+
+margin-bottom:20px;
+
+padding:18px 20px;
+
+background:white;
+
+border-radius:14px;
+
+box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+border:1px solid #e5edf6;
+
+}
+
+
+
+
+
+
+
+
+
+
+.toolbar-actions{
+
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+justify-content:flex-end;
+
+}
+
+.toolbar-actions input{
+
+width:300px;
+
+padding:12px 16px;
+
+border:1px solid #d9e2ec;
+
+border-radius:10px;
+
+font-size:14px;
+
+outline:none;
+
+transition:.25s;
+
+background:#f8fbff;
+
+}
+
+.toolbar-actions input:focus{
+
+border-color:#0D6EFD;
+
+background:white;
+
+box-shadow:
+
+0 0 0 4px rgba(13,110,253,.15);
+
+}
+
+
+button{
+
+background:#003366;
+
+color:white;
+
+border:none;
+
+padding:10px 18px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+font-weight:600;
+
+transition:.25s;
+
+}
+
+
+
+
+button:hover{
+
+background:#0D6EFD;
+
+transform:
+
+translateY(-2px);
+
+box-shadow:
+
+0 5px 15px rgba(13,110,253,.25);
+
+}
+
+
+
+
+
+
+
+
+button:hover{
+
+background:#084298;
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:separate;
+
+border-spacing:0;
+
+background:white;
+
+border-radius:14px;
+
+overflow:hidden;
+
+box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+}
+
+
+th{
+
+background:#003366;
+
+color:white;
+
+padding:16px;
+
+font-size:13px;
+
+letter-spacing:.5px;
+
+text-transform:uppercase;
+
+position:sticky;
+
+top:0;
+
+z-index:5;
+
+}
+
+
+td{
+
+padding:15px;
+
+border-bottom:1px solid #edf2f7;
+
+vertical-align:middle;
+
+}
+
+.modal{
+display:none;
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+z-index:9999;
+overflow:auto;
+}
+
+.modal-content{
+position:relative;
+background:white;
+width:500px;
+margin:70px auto;
+padding:20px;
+border-radius:10px;
+z-index:10000;
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+
+
+
+
+
+.modal-content input,
+.modal-content select{
+
+width:100%;
+padding:10px;
+margin-top:10px;
+margin-bottom:10px;
+
+}
+
+
+tr:hover{
+
+background:#f4f9ff;
+
+transition:.2s;
+
+}
+
+
+.approveHeader{
+
+display:grid;
+
+grid-template-columns:repeat(4,1fr);
+
+gap:15px;
+
+margin:15px 0;
+
+}
+
+.approveHeader div{
+
+background:#f8f9fa;
+
+padding:12px;
+
+border-radius:8px;
+
+border:1px solid #ddd;
+
+}
+
+.purposeBox{
+
+background:#f8f9fa;
+
+padding:12px;
+
+border-radius:8px;
+
+border:1px solid #ddd;
+
+margin-bottom:20px;
+
+}
+
+.top-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+background:white;
+
+padding:20px 28px;
+
+border-radius:16px;
+
+box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+margin-bottom:25px;
+
+border:1px solid #e7edf5;
+
+}
+
+
+.notify{
+
+width:46px;
+
+height:46px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+background:#f3f7fc;
+
+border-radius:50%;
+
+font-size:20px;
+
+cursor:pointer;
+
+transition:.25s;
+
+border:1px solid #d9e2ec;
+
+}
+
+.notify:hover{
+
+background:#0D6EFD;
+
+color:white;
+
+transform:rotate(15deg);
+
+}
+
+.profile{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+}
+
+
+.avatar{
+
+width:52px;
+
+height:52px;
+
+background:#003366;
+
+color:white;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+border-radius:50%;
+
+font-weight:bold;
+
+font-size:18px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+
+}
+
+
+.cardTop{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+}
+
+.card h4{
+
+font-size:15px;
+
+font-weight:600;
+
+color:#6B7280;
+
+margin-bottom:10px;
+
+}
+
+
+.card h1{
+
+font-size:38px;
+
+color:#003366;
+
+margin:0;
+
+font-weight:700;
+
+}
+
+.cardIcon{
+
+width:70px;
+
+height:70px;
+
+border-radius:16px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:34px;
+
+color:white;
+
+box-shadow:0 8px 18px rgba(0,0,0,.15);
+
+}
+
+
+
+.blue{
+
+background:#0D6EFD;
+
+}
+
+.orange{
+
+background:#FFC107;
+
+color:#333;
+
+}
+
+.red{
+
+background:#DC3545;
+
+}
+
+.green{
+
+background:#198754;
+
+}
+
+
+.badge{
+
+display:inline-block;
+
+padding:6px 12px;
+
+border-radius:50px;
+
+font-size:12px;
+
+font-weight:bold;
+
+}
+
+.badge.success{
+
+background:#d1f7df;
+
+color:#198754;
+
+}
+
+
+.badge.warning{
+
+background:#fff4cc;
+
+color:#b58105;
+
+}
+
+.badge.danger{
+
+background:#ffd8dd;
+
+color:#dc3545;
+
+}
+
+
+.btnEdit{
+
+background:#0D6EFD;
+
+margin-right:5px;
+
+}
+
+
+
+.btnDelete{
+
+background:#DC3545;
+
+}
+
+
+
+.dashboardGrid{
+
+display:grid;
+
+grid-template-columns:2fr 1fr;
+
+gap:22px;
 
 margin-top:25px;
-font-size:22px;
-font-weight:bold;
-text-align:center;
-color:#2563eb;
+
+margin-bottom:30px;
 
 }
 
-#result{
+.dashboardPanel{
 
-margin-top:20px;
-background:#f8fafc;
-padding:20px;
-border-radius:12px;
-display:none;
+background:white;
+
+padding:22px;
+
+border-radius:18px;
+
+box-shadow:0 8px 18px rgba(0,0,0,.08);
+
+border:1px solid #e5edf6;
+
+}
+.panelTitle{
+
 font-size:18px;
-line-height:1.8;
+
+font-weight:bold;
+
+margin-bottom:20px;
+
+color:#003366;
 
 }
 
-.footer{
 
-margin-top:20px;
-text-align:center;
+.dashboardPanel canvas{
+
+width:100% !important;
+
+height:320px !important;
+
+}
+
+
+
+.toolbar small{
+
+display:block;
+
+margin-top:5px;
+
+color:#6B7280;
+
 font-size:13px;
-color:gray;
 
 }
+
+
+.toolbar h2{
+
+margin:0;
+
+color:#003366;
+
+}
+
+
+.toolbar-actions{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+}
+
+.toolbar-actions button{
+
+background:#198754;
+
+padding:12px 20px;
+
+font-size:14px;
+
+font-weight:600;
+
+}
+
+.toolbar-actions button:hover{
+
+background:#157347;
+
+}
+
+#logoutBtn{
+
+background:#dc3545;
+
+color:#fff;
+
+border:none;
+
+padding:8px 18px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+margin-top:8px;
+
+transition:.3s;
+
+}
+
+#logoutBtn:hover{
+
+background:#b52a37;
+
+}
+
+
+
+
 
 </style>
 
 </head>
 
+
+
+
 <body>
 
-<div class="card">
 
-<h1>☕ COFFEE MISSION CONTROL</h1>
+<div id="loginBox" style="
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100vh;
+background:#eef3f9;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:99999;
+">
 
-<div class="subtitle">
+<div style="
+width:400px;
+background:white;
+padding:35px;
+border-radius:15px;
+box-shadow:0 15px 35px rgba(0,0,0,.2);
+">
 
-Internal Emotional Decision Support System v1.0
+<h2 style="text-align:center;color:#003366;">
+Stock Card Monitoring System
+</h2>
 
-</div>
+<p style="text-align:center;color:#666;">
+Please login to continue
+</p>
 
-<div class="status">
 
-<b>Target :</b> Cherielyn Gregorio<br>
-<b>Status :</b> Online (?)<br>
-<b>Courage Level :</b> Unknown<br>
-<b>Mission :</b> Decide wisely 😂
+<input
+type="text"
+id="username"
+placeholder="Username"
+style="width:100%;padding:12px;margin-top:20px;">
 
-</div>
 
-<button id="coffee">
-
-☕ START COFFEE MISSION
-
-</button>
-
-<div class="choice" id="choices" style="display:none;">
-
-<button class="go">
-
-😎 GO
-
-</button>
-
-<button class="iwas">
-
-🙈 IWAS
-
-</button>
-
-</div>
-
-<div id="loading"></div>
-
-<div id="result"></div>
-
-<div class="footer">
-
-Powered by Coffee Engine™ | Emotional AI Disabled 😂
-
-</div>
-
-</div>
-
-<script>
-
-const coffee=document.getElementById("coffee");
-
-const choices=document.getElementById("choices");
-
-const loading=document.getElementById("loading");
-
-const result=document.getElementById("result");
-
-coffee.onclick=function(){
-
-choices.style.display="flex";
-
-coffee.disabled=true;
-
-coffee.innerHTML="MISSION INITIALIZED";
-
-}
-
-document.querySelector(".go").onclick=function(){
-
-loading.style.display="block";
-
-result.style.display="none";
-
-let percent=0;
-
-loading.innerHTML="Loading Courage... 0%";
-
-let timer=setInterval(function(){
-
-percent+=10;
-
-loading.innerHTML="Loading Courage... "+percent+"%";
-
-if(percent>=100){
-
-clearInterval(timer);
-
-loading.innerHTML="";
-
-result.style.display="block";
-
-result.innerHTML=`
-
-<h2 style="color:green;">✅ Mission Approved</h2>
-
-<hr><br>
-
-📡 Connection Established.<br><br>
-
-☕ Recommendation:<br>
-
-<b>"Smile. Say Hi. Mention Coffee."</b><br><br>
-
-💬 Suggested Line:<br>
-
-<i>"Good morning Ma'am! Coffee later? 😄"</i>
 
 <br><br>
 
-🎖 Confidence Bonus : +100
-
-<br>
-
-❤️ Chance of making someone smile : Increased.
-
-`;
-
-}
-
-},180);
-
-}
-
-document.querySelector(".iwas").onclick=function(){
-
-loading.style.display="block";
-
-result.style.display="none";
-
-let percent=0;
-
-loading.innerHTML="Calculating Escape Route...";
-
-let timer=setInterval(function(){
-
-percent+=10;
-
-loading.innerHTML="Calculating Escape Route... "+percent+"%";
-
-if(percent>=100){
-
-clearInterval(timer);
-
-loading.innerHTML="";
-
-result.style.display="block";
-
-result.innerHTML=`
-
-<h2 style="color:red;">❌ Mission Cancelled</h2>
-
-<hr><br>
-
-System detected another successful escape. 😂
+<input
+type="password"
+id="password"
+placeholder="Password"
+style="width:100%;padding:12px;">
 
 <br><br>
 
-Reason:
+<button
+onclick="loginUser()"
+style="
+width:100%;
+padding:12px;
+background:#003366;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+">
+
+LOGIN
+
+</button>
+
+</div>
+
+</div>
+
+
+<div class="sidebar">
+
+<h2>
+
+DOST Regional Office No. 02
+
+</h2>
+
+<div
+style="
+text-align:center;
+margin-bottom:25px;
+font-size:13px;
+opacity:.85;
+line-height:1.5;">
+
+Procurement Office
+
+Management System
+
+</div>
 
 <ul>
+<li onclick="showSection('sectionDashboard')">
+🏠 Dashboard
+</li>
 
-<li>Insufficient Courage</li>
 
-<li>High Level of Shyness</li>
+<li onclick="showSection('sectionItemMaster')">
+📦 Item Master
+</li>
 
-<li>Coffee Left Unserved</li>
 
-<li>Future Regret Probability: 98%</li>
+
+
+
+
+<li onclick="showSection('sectionStockCard')">
+📒 Stock Card
+</li>
+
+<li onclick="showSection('sectionPendingRequest')">
+📋 Pending Request
+</li>
+
+<li onclick="showSection('sectionApprovedRequest')">
+✅ Approved Request
+</li>
+
+<li>
+📊 Reports
+</li>
+
+
+<li onclick="showSection('sectionUserManagement')">
+👥 User Management
+</li>
+
+<li onclick="showSection('sectionRIS')">
+    📝 RIS
+</li>
+
+
+<li onclick="showSection('sectionEmployeeDetails')">
+    👤 Employee Details
+</li>
+
+
+
+
+
+
 
 </ul>
 
+</div>
+
+<div class="main" id="mainSystem" style="display:none;">
+
+
+<div class="top-header">
+
+    <div class="header-left">
+
+        <div class="logo-box">
+            🏛
+        </div>
+
+        <div>
+
+            <h2>STOCK CARD BALANCE AND MONITORING SYSTEM</h2>
+
+            <small>
+                Department of Science and Technology - Region II
+            </small>
+
+        </div>
+
+    </div>
+
+    <div class="header-right">
+
+        <div class="notify">
+            🔔
+        </div>
+
+        <div class="profile">
+
+            <div class="avatar">
+                FASS
+            </div>
+
+            <div>
+
+                <b>Supply Division</b>
+
+                <br>
+
+                <small id="liveDateTime"></small>
+
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<button id="logoutBtn" onclick="logoutUser()">
+
+🚪 Logout
+
+</button>
+
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section id="sectionDashboard">
+
+
+<div class="cards">
+
+<div class="card">
+
+<div class="cardTop">
+
+<div>
+
+<h4>Total Items</h4>
+
+<h1 id="totalItems">0</h1>
+
+</div>
+
+<div class="cardIcon blue">
+
+📦
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="cardTop">
+
+<div>
+
+<h4>Low Stock</h4>
+
+<h1 id="lowStock">0</h1>
+
+</div>
+
+<div class="cardIcon orange">
+
+⚠
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="cardTop">
+
+<div>
+
+<h4>Out of Stock</h4>
+
+<h1 id="outStock">0</h1>
+
+</div>
+
+<div class="cardIcon red">
+
+❌
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="cardTop">
+
+<div>
+
+<h4>Pending RIS</h4>
+
+<h1 id="pendingRis">0</h1>
+
+</div>
+
+<div class="cardIcon green">
+
+📋
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="dashboardGrid">
+
+    <div class="dashboardPanel">
+
+        <div class="panelTitle">
+            📈 Monthly Stock Movement
+        </div>
+
+        <canvas id="stockChart"></canvas>
+
+    </div>
+
+    <div class="dashboardPanel">
+
+        <div class="panelTitle">
+            📊 Inventory Status
+        </div>
+
+        <canvas id="statusChart"></canvas>
+
+    </div>
+
+</div>
+
+<!-- ====================== -->
+<!-- IDAGDAG MO DITO -->
+<!-- ====================== -->
+
+<div class="activityGrid">
+
+    <div class="activityPanel">
+
+        <h3>🕒 Recent Stock Transactions</h3>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+                    <th>Item</th>
+                    <th>Type</th>
+                    <th>Qty</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tblRecentTransactions">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="activityPanel">
+
+        <h3>⚠ Low Stock Alert</h3>
+
+        <div id="lowStockList">
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ====================== -->
+
+
+
+
+<div class="quickActions">
+
+   
+<button onclick="showSection('sectionItemMaster')">
+    📦
+    <span>Item Master</span>
+</button>
+
+<button onclick="openStockInModal()">
+    📥
+    <span>Stock In</span>
+</button>
+
+<button onclick="showSection('sectionUserManagement')">
+    👥
+    <span>User Management</span>
+</button>
+
+
+<button onclick="showSection('sectionRIS')">
+    📝
+    <span>RIS</span>
+</button>
+
+
+<button onclick="showSection('sectionStockCard')">
+    📊
+    <span>Stock Card</span>
+</button>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+<section id="sectionItemMaster">
+
+
+
+
+<div class="toolbar">
+
+    <div>
+
+        <h2>📦 Item Master</h2>
+
+        <small>
+            Manage inventory items and monitor stock availability
+        </small>
+
+    </div>
+
+    <div class="toolbar-actions">
+
+        <input
+        type="text"
+        id="searchItem"
+        placeholder="🔍 Search Item..."
+        onkeyup="loadItems()">
+
+        <button onclick="openModal()">
+    ➕ Add Item
+</button>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table>
+
+<tr>
+
+<th>Code</th>
+
+<th>Description</th>
+
+<th>Unit</th>
+
+<th>Category</th>
+
+<th>Balance</th>
+
+<th>Status</th>
+
+<th>Minimum</th>
+
+<th>Action</th>
+
+
+
+
+
+
+</tr>
+
+<tbody id="tblItems">
+
+</tbody>
+
+</table>
+
+</section>
+
+
+
+<section id="sectionStockCard" style="display:none;">
+
+<div class="toolbar">
+
+    <div>
+        <h2>📒 Stock Card</h2>
+        <small>Monitor stock movement and inventory balance</small>
+    </div>
+
+    <div class="toolbar-actions">
+
+        <input
+            type="text"
+            id="searchStockCard"
+            placeholder="🔍 Search Item..."
+            onkeyup="loadStockCard()">
+
+        <button onclick="openStockInModal()">
+            📥 Stock In
+        </button>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<table>
+
+
+
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Item Code</th>
+
+<th>Description</th>
+
+<th>Unit</th>
+
+<th>Transaction</th>
+
+<th>Stock In</th>
+
+<th>Stock Out</th>
+
+<th>Balance</th>
+
+</tr>
+
+
+
+
+
+
+
+
+
+</thead>
+
+<tbody id="tblStockCard">
+
+</tbody>
+
+</table>
+
+</section>
+
+
+
+
+
+
+<!-- ===================== -->
+<!-- RIS SECTION -->
+<!-- ===================== -->
+
+<section id="sectionRIS" style="display:none;">
+
+<div class="toolbar">
+
+    <div>
+        <h2>📋 Requisition and Issue Slip (RIS)</h2>
+        <small>Manage and monitor all RIS requests</small>
+    </div>
+
+    <div class="toolbar-actions">
+
+        <button onclick="openRISModal()">
+            ➕ Create RIS
+        </button>
+
+    </div>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="width:50px;">
+<input type="checkbox">
+</th>
+
+<th>RIS No.</th>
+
+<th>Requestor / Full Name</th>
+
+<th>Position</th>
+
+<th>Division</th>
+
+ <th>REMARKS</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tblRISList">
+
+</tbody>
+
+</table>
+
+</section>
+
+
+
+
+<!-- ===================================================== -->
+<!-- EMPLOYEE DETAILS -->
+<!-- ===================================================== -->
+
+<section id="sectionEmployeeDetails" style="display:none;">
+
+<div class="card">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+    ">
+
+        <div>
+
+            <h2>👤 Employee Details</h2>
+
+            <small>
+                Update your Position, Division and Signature
+            </small>
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="openEmployeeModal()">
+
+            ✏ Edit
+
+        </button>
+
+    </div>
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>Full Name</th>
+
+            <th>Position</th>
+
+            <th>Division</th>
+
+            <th>Signature</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody id="tblEmployeeDetails">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section
+id="sectionPendingRequest"
+style="display:none;">
+
+<div class="toolbar">
+
+<h2>📋 Pending Request</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>RIS No.</th>
+
+<th>Requestor</th>
+
+<th>Position</th>
+
+<th>Division</th>
+
+<th>Total Items</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+
+
+
+
+
+</tr>
+
+</thead>
+
+<tbody id="tblRIS">
+
+</tbody>
+
+</table>
+
+</section>
+
+
+
+
+<section
+id="sectionApprovedRequest"
+style="display:none;">
+
+<div class="toolbar">
+
+<h2>✅ Approved Request</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>RIS No.</th>
+
+<th>Item Code</th>
+
+<th>Description</th>
+
+<th>Quantity</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tblApprovedRIS">
+
+</tbody>
+
+</table>
+
+</section>
+
+
+
+
+<section id="sectionUserManagement" style="display:none;">
+
+<div class="toolbar">
+
+<div>
+
+<h2>👥 User Management</h2>
+
+<small>
+Manage System Users
+</small>
+
+</div>
+
+<div class="toolbar-actions">
+
+<button onclick="openUserModal()">
+➕ Add User
+</button>
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<table>
+
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Full Name</th>
+            <th>Position</th>
+            <th>Division</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody id="tblUsers">
+    </tbody>
+
+</table>
+
+<div style="margin-top:25px;text-align:right;">
+
+  <div style="margin-top:25px;text-align:right;">
+
+    <button
+        id="btnCreateRIS"
+        onclick="openRISModal()"
+        style="
+            background:#198754;
+            color:#fff;
+            padding:12px 24px;
+            border:none;
+            border-radius:10px;
+            font-size:15px;
+            font-weight:bold;
+            cursor:pointer;
+        ">
+        📋 Create RIS
+    </button>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<div class="modal" id="itemModal">
+
+<div class="modal-content">
+
+<h2>Add Item</h2>
+
+
+
+
+
+<label>Stock No.</label>
+<input id="code" placeholder="Enter Stock Number">
+
+<label>Description</label>
+<input id="desc" placeholder="Enter Item Description">
+
+<label>Unit</label>
+<select id="unit">
+
+<option>pcs</option>
+<option>box</option>
+<option>ream</option>
+<option>unit</option>
+<option>set</option>
+<option>pack</option>
+<option>bottle</option>
+<option>roll</option>
+<option>kg</option>
+<option>liter</option>
+
+</select>
+
+<label>Category</label>
+<select id="cat">
+
+<option>Office Supplies</option>
+<option>ICT Equipment</option>
+<option>Furniture</option>
+<option>Cleaning Supplies</option>
+<option>Electrical Supplies</option>
+<option>Others</option>
+
+</select>
+
+<label>Unit Price</label>
+<input
+id="itemPrice"
+type="number"
+step="0.01"
+placeholder="0.00">
+
+<label>Beginning Balance</label>
+<input
+id="bal"
+type="number"
+placeholder="0">
+
+<label>Minimum Stock Level</label>
+<input
+id="min"
+type="number"
+placeholder="0">
+
+
+
+
+
+
+
+
+
+
+<button onclick="saveItem()">Save</button>
+
+<button
+style="background:red;margin-top:10px;"
+onclick="closeModal()">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+
+
+
+<div class="modal" id="stockInModal">
+
+<div class="modal-content">
+
+
+
+<h2>📥 Stock In</h2>
+
+<label>Select Item</label>
+
+<select id="stockItem"></select>
+
+<label>Date Purchased</label>
+
+<input
+type="date"
+id="stockDate">
+
+<label>Unit</label>
+
+<select id="stockUnit">
+
+<option>pcs</option>
+<option>box</option>
+<option>ream</option>
+<option>unit</option>
+<option>set</option>
+<option>pack</option>
+<option>bottle</option>
+<option>roll</option>
+<option>kg</option>
+<option>liter</option>
+
+</select>
+
+<label>Quantity</label>
+
+<input
+id="stockQty"
+type="number"
+placeholder="Enter Quantity">
+
+
+
+
+
+
+
+
+
+
+
+
+<button onclick="saveStockIn()">
+
+Receive Stock
+
+</button>
+
+<button
+style="background:red;margin-top:10px;"
+onclick="closeStockInModal()">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+<div class="modal" id="risModal">
+
+<div class="modal-content">
+
+<h2>Create RIS</h2>
+
+<label>Requestor</label>
+
+<input
+type="text"
+id="risRequestor"
+placeholder="Requestor"
+readonly>
+
+<br><br>
+
+<label>Position</label>
+
+<input
+type="text"
+id="risPosition"
+placeholder="Position"
+readonly>
+
+<br><br>
+
+<label>Division / Office</label>
+
+<input
+type="text"
+id="risDivision"
+placeholder="Division"
+readonly>
+
+
+
+<br><br>
+
+<label>Purpose</label>
+
+<textarea
+id="risPurpose"
+placeholder="Purpose"
+style="width:100%;height:70px;"></textarea>
+
+<br><br>
+
+
+
+
+
+
+
+<select id="risItem"></select>
+
+<input
+type="number"
+id="risQty"
+placeholder="Quantity">
+
+<button
+style="background:#198754;"
+onclick="addRISItem()">
+
+➕ Add Item
+
+</button>
+
+<br><br>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Item</th>
+
+<th>Qty</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tblRISItems">
+
+</tbody>
+
+</table>
+
 <br>
 
-🤖 AI Suggestion:
+<button onclick="saveRIS()">
 
-<b>"Next attempt after drinking your own coffee."</b>
+📋 Submit RIS
+
+</button>
+
+
+
+
+
+
+
+
+<button
+style="background:red;margin-top:10px;"
+onclick="closeRISModal()">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+
+
+
+<div class="modal" id="userModal">
+
+<div class="modal-content">
+
+<h2>👥 Add User</h2>
+
+
+<label>Date Created</label>
+<input
+type="text"
+id="userDate"
+readonly>
+
+<label>Full Name</label>
+<input
+type="text"
+id="userFullName"
+placeholder="Enter Full Name">
+
+<label>Position</label>
+<input
+type="text"
+id="userPosition"
+placeholder="Enter Position">
+
+<label>Division</label>
+<input
+type="text"
+id="userDivision"
+placeholder="Enter Division">
+
+<label>Username</label>
+
+<input
+type="text"
+id="userUsername"
+placeholder="Username only (ex. rolex)"
+oninput="this.value=this.value.toLowerCase().replace(/@.*/,'').replace(/\s/g,'')">
+
+<label>Password</label>
+<input
+type="password"
+id="userPassword"
+placeholder="Enter Password">
+
+<label>Role</label>
+<select id="userRole">
+
+    <option value="ADMIN">ADMIN</option>
+
+    <option value="USER">USER</option>
+
+</select>
+
+<button
+style="background:#198754;"
+onclick="saveUser()">
+
+💾 Save User
+
+</button>
+
+<button
+style="background:#dc3545;margin-top:10px;"
+onclick="closeUserModal()">
+
+Close
+
+</button>
+
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+updateDoc,
+deleteDoc,
+doc,
+query,
+where,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAE94ZemsqMv2blcW-py30VXGNSckKeuLQ",
+  authDomain: "stock-card-monitoring.firebaseapp.com",
+  projectId: "stock-card-monitoring",
+  storageBucket: "stock-card-monitoring.firebasestorage.app",
+  messagingSenderId: "1009148553075",
+  appId: "1:1009148553075:web:d075e4a5ffe409b6dbc706",
+  measurementId: "G-QHWZ8GLTJR"
+};
+
+
+
+
+
+
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// =============================
+// DITO NA MAGSISIMULA ANG DATING CODE MO
+// =============================
+
+
+let items = [];
+
+let stockCard = [];
+
+let ris = [];
+
+
+
+let risItems = [];
+
+let editIndex = -1;
+
+
+let users = [];
+
+
+
+function showSection(sectionId){
+
+    const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+    // Wala pang naka-login
+    if(!currentUser){
+        return;
+    }
+
+    const isAdmin =
+    (currentUser.role || "").toUpperCase() === "ADMIN";
+
+    if(!isAdmin){
+
+        const allowedSections = [
+
+            "sectionRIS",
+            "sectionEmployeeDetails"
+
+        ];
+
+        if(!allowedSections.includes(sectionId)){
+
+            alert("Access Denied.");
+            return;
+
+        }
+
+    }
+
+    const sections = [
+
+        "sectionDashboard",
+        "sectionItemMaster",
+        "sectionStockCard",
+        "sectionRIS",
+        "sectionEmployeeDetails",
+        "sectionPendingRequest",
+        "sectionApprovedRequest",
+        "sectionUserManagement"
+
+    ];
+
+    sections.forEach(id=>{
+
+        const sec=document.getElementById(id);
+
+        if(sec){
+            sec.style.display="none";
+        }
+
+    });
+
+    document.getElementById(sectionId).style.display="block";
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function openModal(){
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(
+(currentUser.role || "").toUpperCase() !== "ADMIN"
+){
+
+    alert("Access Denied.");
+
+    return;
+
+}
+
+
+
+
+
+
+
+
+document.getElementById("itemModal").style.display="block";
+
+}
+
+
+async function loginUser(){
+
+    const username = document
+        .getElementById("username")
+        .value
+        .trim()
+        .toLowerCase()
+        .split("@")[0];
+
+    const password = document
+        .getElementById("password")
+        .value;
+
+    if(username=="" || password==""){
+
+        alert("Please enter username and password.");
+        return;
+
+    }
+
+    const q = query(
+        collection(db,"users"),
+        where("username","==",username),
+        where("password","==",password),
+        where("status","==","ACTIVE")
+    );
+
+    const snap = await getDocs(q);
+
+    if(snap.empty){
+
+        alert("Invalid Username or Password.");
+        return;
+
+    }
+
+    const userData = {
+
+        docId : snap.docs[0].id,
+
+        ...snap.docs[0].data()
+
+    };
+
+    // SAVE CURRENT USER
+    localStorage.setItem(
+        "currentUser",
+        JSON.stringify(userData)
+    );
+
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("mainSystem").style.display="block";
+
+    await loadItems();
+await loadRIS();
+await loadStockCard();
+await loadUsers();
+
+applyUserRole();
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(
+(currentUser.role || "").toUpperCase()=="ADMIN"
+){
+
+    showSection("sectionDashboard");
+
+}else{
+
+    showSection("sectionRIS");
+
+}
+
+}
+
+
+
+
+window.onload = async function(){
+
+    const savedUser = localStorage.getItem("currentUser");
+
+    if(savedUser){
+
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("mainSystem").style.display="block";
+
+        await loadItems();
+await loadRIS();
+await loadStockCard();
+await loadUsers();
+
+applyUserRole();
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(
+(currentUser.role || "").toUpperCase()=="ADMIN"
+){
+
+    showSection("sectionDashboard");
+
+}else{
+
+    showSection("sectionRIS");
+
+}
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.loginUser = loginUser;
+
+function logoutUser(){
+
+    if(!confirm("Are you sure you want to logout?")){
+
+        return;
+
+    }
+
+    localStorage.removeItem("currentUser");
+
+    location.reload();
+
+}
+
+
+
+
+window.logoutUser = logoutUser;
+
+
+
+
+
+
+
+
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.loginUser = loginUser;
+window.showSection = showSection;
+
+// ===========================
+// ROLE BASED MENU
+// ===========================
+
+function applyUserRole(){
+
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
+
+    if(!currentUser) return;
+
+    const menus =
+        document.querySelectorAll(".sidebar li");
+
+    // ADMIN
+    if((currentUser.role || "").toUpperCase() === "ADMIN"){
+
+        menus.forEach(menu=>{
+            menu.style.display="";
+        });
+
+        return;
+
+    }
+
+    // USER
+    menus.forEach(menu=>{
+
+        menu.style.display="none";
+
+    });
+
+    
+
+
+// USER MENUS
+menus.forEach(menu=>{
+
+    const text = menu.textContent.trim();
+
+    if(
+        text.includes("RIS") ||
+        text.includes("Employee Details")
+    ){
+
+        menu.style.display="flex";
+
+    }
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+function closeModal(){
+
+document.getElementById("itemModal").style.display="none";
+
+}
+window.closeModal = closeModal;
+
+function openStockInModal(){
+
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(
+(currentUser.role || "").toUpperCase() !== "ADMIN"
+){
+
+    alert("Access Denied.");
+
+    return;
+
+}
+
+
+
+
+
+
+
+
+
+
+if(items.length==0){
+
+alert("No items available.");
+
+return;
+
+}
+
+
+
+let html="";
+
+items.forEach((i,index)=>{
+
+html+=`
+
+<option value="${index}">
+
+${i.code} - ${i.description}
+
+</option>
+
+`;
+
+});
+
+stockItem.innerHTML=html;
+
+
+document.getElementById("stockDate").value =
+new Date().toISOString().split("T")[0];
+
+
+document.getElementById("stockInModal").style.display="block";
+
+}
+
+
+
+window.openStockInModal = openStockInModal;
+
+
+
+
+
+
+
+
+function closeStockInModal(){
+
+document.getElementById("stockInModal").style.display="none";
+
+}
+
+
+window.closeStockInModal = closeStockInModal;
+
+
+
+
+
+
+async function saveItem(){
+
+// Check duplicate Item Code
+
+if(editIndex==-1){
+
+let exist = items.find(i => i.code.toUpperCase() === code.value.toUpperCase());
+
+if(exist){
+
+alert("Item Code already exists!");
+
+return;
+
+}
+
+}
+
+
+
+let obj={
+
+code:code.value,
+
+description:desc.value,
+
+unit:unit.value,
+
+category:cat.value,
+price:Number(document.getElementById("itemPrice").value),
+balance:Number(bal.value),
+
+minimum:Number(min.value)
+
+};
+
+if(editIndex==-1){
+
+    await addDoc(collection(db,"items"), obj);
+
+}else{
+
+    await updateDoc(
+        doc(db,"items",items[editIndex].id),
+        obj
+    );
+
+    editIndex = -1;
+
+}
+
+
+
+
+
+
+
+await loadItems();
+closeModal();
+searchItem.value="";
+code.value="";
+desc.value="";
+unit.selectedIndex=0;
+cat.selectedIndex=0;
+document.getElementById("itemPrice").value="";
+
+bal.value="";
+min.value="";
+
+// ✅ Success Message
+alert("✅ Item saved successfully!");
+
+}
+
+window.saveItem = saveItem;
+
+
+
+
+
+
+
+async function loadItems(){
+
+items = [];
+
+const snapshot = await getDocs(collection(db,"items"));
+
+snapshot.forEach((docSnap)=>{
+
+    items.push({
+
+    id: docSnap.id,
+
+    ...docSnap.data()
+
+});
+
+});
+
+let html="";
+
+let keyword = searchItem.value.toLowerCase();
+
+items.forEach((i,index)=>{
+
+
+
+
+
+if(
+
+i.code.toLowerCase().includes(keyword)
+
+||
+
+i.description.toLowerCase().includes(keyword)
+
+||
+
+i.category.toLowerCase().includes(keyword)
+
+){
+
+html+=`
+
+
+
+
+
+
+
+
+
+
+
+
+
+<tr>
+
+<td>${i.code}</td>
+
+<td>${i.description}</td>
+
+<td>${i.unit}</td>
+
+<td>${i.category}</td>
+
+<td>
+
+${
+i.balance==0
+
+?
+
+'<span style="color:red;font-weight:bold;">OUT OF STOCK</span>'
+
+:
+
+i.balance<=i.minimum
+
+?
+
+'<span style="color:orange;font-weight:bold;">'+i.balance+'</span>'
+
+:
+
+'<span style="color:green;">'+i.balance+'</span>'
+
+}
+
+</td>
+
+<td>
+
+
+
+${
+i.balance==0
+
+?
+
+'<span class="badge danger">🔴 OUT OF STOCK</span>'
+
+:
+
+i.balance<=i.minimum
+
+?
+
+'<span class="badge warning">🟡 LOW STOCK</span>'
+
+:
+
+'<span class="badge success">🟢 AVAILABLE</span>'
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</td>
+
+<td>${i.minimum}</td>
+
+
+<td>
+
+<button class="btnEdit"
+onclick="confirmEdit(${index})">
+
+✏ Edit
+
+</button>
+
+</td>
+
+
+
+
+
+
+
+
+
+</tr>
+
 
 `;
 
 }
 
-},180);
+});
+
+tblItems.innerHTML=html;
+
+totalItems.innerHTML=items.length;
+
+lowStock.innerHTML=
+items.filter(x=>x.balance<=x.minimum && x.balance>0).length;
+
+outStock.innerHTML=
+items.filter(x=>x.balance==0).length;
+
+pendingRis.innerHTML =
+ris.filter(r => r.status=="PENDING").length;
+loadRIS();
+
+if(typeof statusChart !== "undefined"){
+
+    statusChart.data.datasets[0].data=[
+
+        items.filter(x=>x.balance>x.minimum).length,
+
+        items.filter(x=>x.balance<=x.minimum && x.balance>0).length,
+
+        items.filter(x=>x.balance==0).length
+
+    ];
+
+    statusChart.update();
 
 }
 
-</script>
+
+
+
+
+
+}
+
+
+window.loadItems = loadItems;
+
+
+
+function confirmEdit(index){
+
+    const yes = confirm("Are you sure you want to edit this item?");
+
+    if(yes){
+
+        editItem(index);
+
+    }
+
+}
+
+
+window.confirmEdit = confirmEdit;
+
+
+
+
+
+
+
+function editItem(i){
+
+editIndex=i;
+
+code.value=items[i].code;
+
+desc.value=items[i].description;
+
+unit.value=items[i].unit;
+
+cat.value=items[i].category;
+
+bal.value=items[i].balance;
+
+min.value=items[i].minimum;
+
+openModal();
+
+}
+window.editItem = editItem;
+
+
+
+async function saveStockIn(){
+
+    let index = Number(stockItem.value);
+    let qty = Number(stockQty.value);
+
+    if(qty <= 0){
+
+        alert("Enter a valid quantity.");
+        return;
+
+    }
+
+    let newBalance = items[index].balance + qty;
+
+    // Update item balance sa Firestore
+    await updateDoc(
+        doc(db,"items",items[index].id),
+        {
+            balance: newBalance
+        }
+    );
+
+    // Temporary stock card (next step natin ito ililipat sa Firestore)
+
+   
+
+await addDoc(collection(db,"stockCard"),{
+
+    date:new Date().toLocaleDateString(),
+
+    datePurchased: document.getElementById("stockDate").value,
+
+    code:items[index].code,
+
+    description:items[index].description,
+
+    unit: document.getElementById("stockUnit").value,
+
+    type:"STOCK IN",
+
+    qtyIn:qty,
+
+    qtyOut:0,
+
+    balance:newBalance
+
+});
+
+
+
+
+
+
+
+
+
+
+    await loadItems();
+    loadStockCard();
+
+    stockQty.value="";
+
+    closeStockInModal();
+
+    alert("Stock received successfully!");
+
+}
+
+
+
+window.saveStockIn = saveStockIn;
+
+
+async function loadStockCard(){
+
+    stockCard=[];
+
+    const snapshot = await getDocs(collection(db,"stockCard"));
+
+    snapshot.forEach(docSnap=>{
+
+        stockCard.push(docSnap.data());
+
+    });
+
+    let html="";
+let keyword = document.getElementById("searchStockCard").value.toLowerCase();
+
+   stockCard.forEach(r=>{
+
+    if(
+        r.code.toLowerCase().includes(keyword) ||
+        r.description.toLowerCase().includes(keyword)
+    ){
+
+    html+=`
+
+    <tr>
+        <td>${r.datePurchased || r.date}</td>
+        <td>${r.code}</td>
+        <td>${r.description}</td>
+        <td>${r.unit || ""}</td>
+        <td>${r.type}</td>
+        <td>${r.qtyIn}</td>
+        <td>${r.qtyOut}</td>
+        <td>${r.balance}</td>
+    </tr>
+       `;
+
+    }
+
+});
+
+    tblStockCard.innerHTML=html;
+
+}
+
+
+
+
+
+
+
+
+
+
+function showStockCard(){
+
+    loadStockCard();
+
+    showSection("sectionStockCard");
+
+}
+
+
+window.openRISModal = openRISModal;
+
+function closeRISModal(){
+
+document.getElementById("risModal").style.display="none";
+
+}
+function openRISModal(){
+
+    if(items.length==0){
+
+        alert("No items available.");
+        return;
+
+    }
+
+    let html="";
+
+    items.forEach((i,index)=>{
+
+        html+=`
+        <option value="${index}">
+            ${i.code} - ${i.description}
+            (Balance : ${i.balance})
+        </option>
+        `;
+
+    });
+
+    risItem.innerHTML = html;
+
+    const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+    if(currentUser){
+
+        document.getElementById("risRequestor").value =
+        currentUser.fullname || currentUser.fullName || "";
+
+        document.getElementById("risDivision").value =
+        currentUser.division || "";
+
+        // Position
+        if(document.getElementById("risPosition")){
+
+            document.getElementById("risPosition").value =
+            currentUser.position || "";
+
+        }
+
+        const isAdmin =
+        (currentUser.role || "").toUpperCase()=="ADMIN";
+
+        document.getElementById("risRequestor").readOnly = !isAdmin;
+        document.getElementById("risDivision").readOnly = !isAdmin;
+
+        if(document.getElementById("risPosition")){
+
+            document.getElementById("risPosition").readOnly = !isAdmin;
+
+        }
+
+    }
+
+    document.getElementById("risModal").style.display="block";
+
+}
+
+window.closeRISModal = closeRISModal;
+
+
+function openUserModal(){
+
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(
+(currentUser.role || "").toUpperCase() !== "ADMIN"
+){
+
+    alert("Access Denied.");
+
+    return;
+
+}
+
+
+
+
+
+
+
+    document.getElementById("userDate").value =
+    new Date().toLocaleDateString();
+
+    document.getElementById("userModal").style.display = "block";
+
+}
+
+function closeUserModal(){
+
+    document.getElementById("userModal").style.display = "none";
+
+}
+
+
+
+
+
+
+
+
+
+
+function addRISItem(){
+
+let index = Number(risItem.value);
+
+let qty = Number(risQty.value);
+
+if(qty<=0){
+
+alert("Invalid Quantity");
+
+return;
+
+}
+
+if(qty>items[index].balance){
+
+alert("Insufficient Stock!");
+
+return;
+
+}
+
+// Check duplicate item
+let exist = risItems.find(x=>x.item==index);
+
+if(exist){
+
+exist.qty += qty;
+
+}else{
+
+risItems.push({
+
+item:index,
+
+qty:qty
+
+});
+
+}
+
+loadRISItems();
+
+risQty.value="";
+
+}
+
+window.addRISItem = addRISItem;
+
+
+async function saveRIS(){
+
+if(risItems.length==0){
+
+alert("Please add at least one item.");
+
+return;
+
+}
+
+console.log("Saving RIS...");
+console.log(risItems);
+console.log(risRequestor.value);
+console.log(risDivision.value);
+
+
+
+
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+await addDoc(collection(db,"ris"),{
+
+id:"RIS-"+Date.now(),
+
+date:new Date().toLocaleDateString(),
+
+requestor:
+document.getElementById("risRequestor").value,
+
+username:
+currentUser.username,
+
+position:
+document.getElementById("risPosition").value,
+
+division:
+document.getElementById("risDivision").value,
+
+purpose:risPurpose.value,
+
+status:"PENDING",
+
+items:[...risItems]
+
+});
+
+
+
+
+
+
+
+
+
+
+console.log("RIS SAVED SUCCESSFULLY");
+
+
+
+
+
+
+risItems=[];
+
+loadRISItems();
+
+risRequestor.value="";
+
+risDivision.value="";
+
+risPurpose.value="";
+
+pendingRis.innerHTML=
+
+ris.filter(r=>r.status=="PENDING").length;
+
+
+
+
+closeRISModal();
+
+await loadRIS();
+
+alert("RIS submitted successfully!");
+
+}
+
+
+window.saveRIS = saveRIS;
+
+
+
+async function loadRIS(){
+
+let html = "";
+let htmlRIS = "";
+
+
+
+
+const snapshot = await getDocs(collection(db,"ris"));
+
+ris = [];
+
+snapshot.forEach(docSnap=>{
+
+   ris.push({
+
+    docId: docSnap.id,
+
+    ...docSnap.data()
+
+});
+
+});
+
+
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+const isAdmin =
+(currentUser.role || "").toUpperCase() === "ADMIN";
+
+ris.forEach((r,index)=>{
+
+    // USER = sariling request lang
+    if(
+        !isAdmin &&
+        r.username !== currentUser.username
+    ){
+        return;
+    }
+
+    let totalQty = 0;
+
+    r.items.forEach(x=>{
+
+        totalQty += x.qty;
+
+    });
+
+
+
+htmlRIS += `
+<tr>
+
+<td>
+<input type="checkbox">
+</td>
+
+<td>${r.id}</td>
+
+<td>${r.requestor}</td>
+
+<td>${r.position || "-"}</td>
+
+<td>${r.division}</td>
+
+<td>
+${
+    r.status=="APPROVED"
+    ? '<span style="background:#198754;color:#fff;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;">APPROVED</span>'
+    : '<span style="background:#ffc107;color:#000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;">PENDING</span>'
+}
+</td>
+
+<td>
+
+<button onclick="viewRIS(${index})">
+👁 View
+</button>
+
+</td>
+
+</tr>
+`;
+
+
+
+
+
+
+
+
+
+
+if(
+    r.status=="PENDING" &&
+    (
+        isAdmin ||
+        r.username===currentUser.username
+    )
+){
+
+
+
+
+
+
+
+
+
+
+
+
+html += `
+
+<tr>
+
+<td>${r.id}</td>
+
+<td>${r.requestor}</td>
+
+<td>${r.position || "-"}</td>
+
+<td>${r.division}</td>
+
+<td>${r.items.length} Item(s)</td>
+
+<td>${r.status}</td>
+
+<td>
+
+<button
+style="background:green;"
+onclick="openApproveModal(${index})">
+
+For Approval
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+});
+
+tblRIS.innerHTML = html;
+tblRISList.innerHTML = htmlRIS;
+
+// Approved List
+loadApprovedRIS();
+
+}
+
+
+
+
+
+
+
+
+
+async function approveRIS(index){
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(
+(currentUser.role || "").toUpperCase() !== "ADMIN"
+){
+
+    alert("Only ADMIN can approve RIS.");
+
+    return;
+
+}
+
+
+
+
+
+
+
+    let r = ris[index];
+
+    if(r.status=="APPROVED"){
+        return;
+    }
+
+    // Check muna kung sapat ang stock
+    for(let x of r.items){
+
+        if(items[x.item].balance < x.qty){
+
+            alert(items[x.item].description + " has insufficient stock.");
+
+            return;
+
+        }
+
+    }
+
+    // Deduct lahat ng items
+
+   
+for (const x of r.items){
+
+    items[x.item].balance -= x.qty;
+
+    await updateDoc(
+        doc(db,"items",items[x.item].id),
+        {
+            balance: items[x.item].balance
+        }
+    );
+
+    await addDoc(collection(db,"stockCard"),{
+
+    date:new Date().toLocaleDateString(),
+
+    code:items[x.item].code,
+
+    description:items[x.item].description,
+
+    unit:items[x.item].unit,
+
+    type:"STOCK OUT",
+
+    qtyIn:0,
+
+    qtyOut:x.qty,
+
+    balance:items[x.item].balance
+
+});
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   r.status = "APPROVED";
+
+await updateDoc(
+    doc(db,"ris",r.docId),
+    {
+        status:"APPROVED"
+    }
+);
+
+
+
+
+
+
+    await loadItems();
+    await loadRIS();
+    loadApprovedRIS();
+    loadStockCard();
+
+    pendingRis.innerHTML =
+    ris.filter(r=>r.status=="PENDING").length;
+
+    alert("✅ RIS Approved Successfully!");
+
+}
+
+function loadApprovedRIS(){
+
+    const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+    const isAdmin =
+    (currentUser.role || "").toUpperCase() === "ADMIN";
+
+    let html="";
+
+    ris.forEach((r,index)=>{
+
+        // USER = sariling approved lang
+        if(!isAdmin && r.username !== currentUser.username){
+            return;
+        }
+
+        if(r.status=="APPROVED"){
+
+            let totalQty = 0;
+
+            r.items.forEach(x=>{
+                totalQty += x.qty;
+            });
+
+            html += `
+            <tr>
+
+                <td>${r.id}</td>
+
+                <td>${r.items.length} Item(s)</td>
+
+                <td>Multiple Items</td>
+
+                <td>${totalQty}</td>
+
+                <td style="color:green;font-weight:bold;">
+                    APPROVED
+                </td>
+
+                <td>
+
+                    <button onclick="viewRIS(${index})">
+                        View
+                    </button>
+
+                </td>
+
+            </tr>
+            `;
+
+        }
+
+    });
+
+    tblApprovedRIS.innerHTML = html;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+function viewRIS(index){
+
+    let r = ris[index];
+
+    currentRIS = r;
+
+    document.getElementById("viewRISNo").innerHTML = r.id;
+    document.getElementById("viewRequestor").innerHTML = r.requestor;
+    document.getElementById("viewDivision").innerHTML = r.division;
+    document.getElementById("approvePurpose").innerHTML = r.purpose;
+    document.getElementById("viewDate").innerHTML = r.date;
+
+    let html="";
+
+    r.items.forEach(x=>{
+
+        let item = items[x.item];
+
+        html += `
+        <tr>
+            <td>${item.code}</td>
+            <td>${item.description}</td>
+            <td>${x.qty}</td>
+        </tr>
+        `;
+
+    });
+
+    document.getElementById("tblViewRISItems").innerHTML = html;
+
+    document.getElementById("viewRISModal").style.display="block";
+
+}
+
+
+
+
+let currentApproveIndex = -1;
+let currentRIS = null;
+
+
+function openApproveModal(index){
+
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(
+(currentUser.role || "").toUpperCase() !== "ADMIN"
+){
+
+    alert("Only ADMIN can approve RIS.");
+
+    return;
+
+}
+
+
+
+
+
+
+
+
+
+
+    currentApproveIndex = index;
+
+    let r = ris[index];
+
+    approveRISNo.innerHTML = r.id;
+
+    approveRequestor.innerHTML = r.requestor;
+
+    approveDivision.innerHTML = r.division;
+
+    approvePurpose.innerHTML = r.purpose;
+
+    let html = "";
+
+    r.items.forEach((x,i)=>{
+
+        let item = items[x.item];
+
+        let disabled = "";
+
+        let checked = "checked";
+
+        // Kapag kulang ang stock
+        if(item.balance < x.qty){
+
+            disabled = "disabled";
+
+            checked = "";
+
+        }
+
+        html += `
+
+        <tr>
+
+            <td style="text-align:center;">
+
+               <input
+type="checkbox"
+class="approveItem"
+name="approveItem"
+value="${i}"
+${checked}
+${disabled}>
+
+            </td>
+
+            <td>${item.code}</td>
+
+            <td>${item.description}</td>
+
+            <td>${x.qty}</td>
+
+            <td>${item.balance}</td>
+
+        </tr>
+
+        `;
+
+    });
+
+    tblApproveItems.innerHTML = html;
+
+    chkAllItems.checked = true;
+
+    document.getElementById("approveRISModal").style.display = "block";
+
+}
+
+function closeApproveModal(){
+
+    document.getElementById("approveRISModal").style.display = "none";
+
+}
+
+
+function toggleAllApprovalItems(){
+
+    let checked = document.getElementById("chkAllItems").checked;
+
+    let list = document.querySelectorAll(".approveItem");
+
+    list.forEach(chk=>{
+
+        if(!chk.disabled){
+
+            chk.checked = checked;
+
+        }
+
+    });
+
+}
+
+
+// Show section only kapag may naka-login
+
+if(localStorage.getItem("currentUser")){
+
+    showSection("sectionDashboard");
+
+}
+
+
+
+
+
+
+
+function loadRISItems(){
+
+let html="";
+
+risItems.forEach((r,index)=>{
+
+let item=items[r.item];
+
+html+=`
+
+<tr>
+
+<td>
+
+${item.code} - ${item.description}
+
+</td>
+
+<td>
+
+${r.qty}
+
+</td>
+
+<td>
+
+<button
+style="background:red;"
+onclick="removeRISItem(${index})">
+
+Remove
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+tblRISItems.innerHTML=html;
+
+}
+
+function removeRISItem(index){
+
+risItems.splice(index,1);
+
+loadRISItems();
+
+}
+window.removeRISItem = removeRISItem;
+
+function closeViewRIS(){
+    currentRIS = null;
+    document.getElementById("viewRISModal").style.display = "none";
+}
+
+
+
+
+
+function printRIS(){
+
+    if(!currentRIS) return;
+
+    let rows="";
+
+    currentRIS.items.forEach(x=>{
+
+        let item = items[x.item];
+
+        rows += `
+
+       
+<tr>
+
+<td>
+
+${item.code}
+
+</td>
+
+<td>
+
+${item.unit}
+
+</td>
+
+<td>
+
+${item.description}
+
+</td>
+
+<td>
+
+${x.qty}
+
+</td>
+
+<td>
+
+</td>
+
+</tr>
+
+
+
+
+
+
+
+        `;
+
+    });
+
+    let win = window.open("","","width=900,height=700");
+
+    win.document.write(`
+
+    <html>
+
+    <head>
+
+    <title>RIS</title>
+
+    <style>
+
+    body{
+
+        font-family:Arial;
+
+        padding:30px;
+
+    }
+
+    table{
+
+        width:100%;
+
+        border-collapse:collapse;
+
+    }
+
+    th,td{
+
+        border:1px solid #000;
+
+        padding:8px;
+
+    }
+
+    h2{
+
+        text-align:center;
+
+    }
+
+    </style>
+
+    </head>
+
+    <body>
+
+  
+<div style="text-align:center;line-height:1.4;">
+
+<h4 style="margin:0;">
+Republic of the Philippines
+</h4>
+
+<h3 style="margin:5px 0;">
+DEPARTMENT OF SCIENCE AND TECHNOLOGY
+</h3>
+
+<h4 style="margin:0;">
+CARIG SUR, TUGUEGARAO CITY
+</h4>
+
+<h2 style="margin-top:20px;">
+REQUISITION AND ISSUE SLIP
+</h2>
+
+</div>
+
+
+
+<table
+style="width:100%;margin-top:20px;border:none;">
+
+<tr>
+
+<td style="border:none;">
+
+<b>Division :</b>
+
+${currentRIS.division}
+
+</td>
+
+<td style="border:none;text-align:right;">
+
+<b>RIS No :</b>
+
+${currentRIS.id}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="border:none;">
+
+<b>Requestor :</b>
+
+${currentRIS.requestor}
+
+</td>
+
+<td style="border:none;text-align:right;">
+
+<b>Date :</b>
+
+${new Date().toLocaleDateString()}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="2"
+style="border:none;">
+
+<b>Purpose :</b>
+
+${currentRIS.purpose}
+
+</td>
+
+</tr>
+
+</table>
+
+
+<table>
+
+<tr>
+
+<th style="width:120px;">
+
+Stock No.
+
+</th>
+
+<th style="width:100px;">
+
+Unit
+
+</th>
+
+<th>
+
+Item Description
+
+</th>
+
+<th style="width:80px;">
+
+Quantity
+
+</th>
+
+<th style="width:120px;">
+
+Remarks
+
+</th>
+
+</tr>
+
+${rows}
+
+</table>
+
+
+
+<br><br>
+
+<table
+style="width:100%;border:none;margin-top:40px;">
+
+<tr>
+
+<td
+style="border:none;text-align:center;">
+
+Requested by:
+
+<br><br><br>
+
+________________________
+
+<br>
+
+${currentRIS.requestor}
+
+</td>
+
+<td
+style="border:none;text-align:center;">
+
+Approved by:
+
+<br><br><br>
+
+________________________
+
+</td>
+
+<td
+style="border:none;text-align:center;">
+
+Issued by:
+
+<br><br><br>
+
+________________________
+
+</td>
+
+<td
+style="border:none;text-align:center;">
+
+Received by:
+
+<br><br><br>
+
+________________________
+
+</td>
+
+</tr>
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </body>
+
+</html>
+
+`);
+
+
+
+
+
+
+
+
+
+
+
+   
+
+
+   
+
+    win.document.close();
+
+    win.print();
+
+}
+
+
+
+
+setInterval(function(){
+
+document.getElementById("liveDateTime").innerHTML=
+
+new Date().toLocaleString();
+
+},1000);
+
+async function approveSelectedItems(){
+
+    let r = ris[currentApproveIndex];
+
+    let checks = document.querySelectorAll(".approveItem");
+
+    let approved = 0;
+
+    for(let i=0;i<checks.length;i++){
+
+        if(checks[i].checked){
+
+            let x = r.items[i];
+
+            items[x.item].balance -= x.qty;
+
+            await updateDoc(
+                doc(db,"items",items[x.item].id),
+                {
+                    balance:items[x.item].balance
+                }
+            );
+
+            approved++;
+
+        }
+
+    }
+
+    if(approved==0){
+
+        alert("Select at least one item.");
+
+        return;
+
+    }
+
+    await updateDoc(
+        doc(db,"ris",r.docId),
+        {
+            status:"APPROVED"
+        }
+    );
+
+    closeApproveModal();
+
+    await loadItems();
+    await loadRIS();
+    loadApprovedRIS();
+    loadStockCard();
+
+    alert("RIS Approved Successfully.");
+
+}
+
+
+
+
+
+const stockChart = new Chart(
+
+document.getElementById("stockChart"),
+
+{
+
+type:"line",
+
+data:{
+
+labels:[
+"Jan",
+"Feb",
+"Mar",
+"Apr",
+"May",
+"Jun",
+"Jul"
+],
+
+datasets:[{
+
+label:"Stock In",
+
+data:[0,0,0,0,0,0,0],
+
+borderWidth:3,
+
+tension:.35,
+
+fill:false
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+display:true
+
+}
+
+}
+
+}
+
+});
+
+
+
+
+const statusChart = new Chart(
+
+document.getElementById("statusChart"),
+
+{
+
+type:"doughnut",
+
+data:{
+
+labels:[
+
+"Available",
+
+"Low Stock",
+
+"Out of Stock"
+
+],
+
+datasets:[{
+
+data:[0,0,0]
+
+}]
+
+},
+
+options:{
+
+responsive:true
+
+}
+
+});
+
+async function saveUser(){
+
+    const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+    if(
+        (currentUser.role || "").toUpperCase() !== "ADMIN"
+    ){
+        alert("Only ADMIN can add users.");
+        return;
+    }
+
+    const fullName =
+    document.getElementById("userFullName").value.trim();
+
+    const position =
+    document.getElementById("userPosition").value.trim();
+
+    const division =
+    document.getElementById("userDivision").value.trim();
+
+    const username =
+    document.getElementById("userUsername").value
+    .trim()
+    .toLowerCase();
+
+    const password =
+    document.getElementById("userPassword").value;
+
+    const role =
+    document.getElementById("userRole").value;
+
+    if(
+        fullName=="" ||
+        position=="" ||
+        division=="" ||
+        username=="" ||
+        password==""
+    ){
+
+        alert("Please complete all fields.");
+        return;
+
+    }
+
+    // Duplicate Username
+    const q = query(
+        collection(db,"users"),
+        where("username","==",username)
+    );
+
+    const snap = await getDocs(q);
+
+    if(!snap.empty){
+
+        alert("Username already exists.");
+        return;
+
+    }
+
+    await addDoc(collection(db,"users"),{
+
+        dateCreated:
+        document.getElementById("userDate").value,
+
+        fullname:fullName,
+
+        position:position,
+
+        division:division,
+
+        username:username,
+
+        password:password,
+
+        role:role,
+
+        status:"ACTIVE"
+
+    });
+
+    alert("User added successfully.");
+
+    closeUserModal();
+
+    await loadUsers();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async function loadUsers(){
+
+    users=[];
+
+    const snapshot = await getDocs(collection(db,"users"));
+
+    let html="";
+
+    snapshot.forEach(docSnap=>{
+
+        const u = docSnap.data();
+
+        users.push({
+
+            id:docSnap.id,
+
+            ...u
+
+        });
+
+    });
+
+    users.forEach((u,index)=>{
+
+        html+=`
+
+<tr>
+
+<td>${u.date}</td>
+
+<td>${u.fullname}</td>
+
+<td>${u.position}</td>
+
+<td>${u.division}</td>
+
+<td>${u.username}</td>
+
+<td>${u.role}</td>
+
+<td>${u.status}</td>
+
+<td>
+
+<button class="btnDelete"
+
+onclick="deleteUser('${u.id}')">
+
+🗑 Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+    });
+
+    tblUsers.innerHTML=html;
+
+}
+
+
+
+
+
+async function deleteUser(id){
+
+    if(confirm("Delete this user?")){
+
+        await deleteDoc(doc(db,"users",id));
+
+        await loadUsers();
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function saveData() {
+  const name = document.getElementById("itemName").value;
+  const qty = document.getElementById("qty").value;
+
+  db.collection("items").add({
+    name: name,
+    quantity: Number(qty),
+    createdAt: new Date()
+  })
+  .then(() => {
+    alert("Saved!");
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
+
+
+
+
+
+
+window.showSection = showSection;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.openStockInModal = openStockInModal;
+window.closeStockInModal = closeStockInModal;
+window.saveStockIn = saveStockIn;
+window.openRISModal = openRISModal;
+window.closeRISModal = closeRISModal;
+window.addRISItem = addRISItem;
+window.removeRISItem = removeRISItem;
+window.saveRIS = saveRIS;
+window.openUserModal = openUserModal;
+window.closeUserModal = closeUserModal;
+window.saveUser = saveUser;
+window.editItem = editItem;
+window.viewRIS = viewRIS;
+window.openApproveModal = openApproveModal;
+window.closeApproveModal = closeApproveModal;
+window.toggleAllApprovalItems = toggleAllApprovalItems;
+window.approveSelectedItems = approveSelectedItems;
+window.printRIS = printRIS;
+window.closeViewRIS = closeViewRIS;
+
+
+
+
+
+
+
+document.getElementById("loginBox").style.display="flex";
+document.getElementById("mainSystem").style.display="none";
+
+
+
+
+
+
+
+
+</script>
+
+
+
+<div id="viewRISModal" class="modal">
+
+    <div class="modal-content" style="width:700px;">
+
+        <span
+        class="close"
+        onclick="closeViewRIS()">
+
+        &times;
+
+        </span>
+
+        <h2>📋 RIS Details</h2>
+
+        <hr>
+
+       <div class="approveHeader">
+
+<div>
+<b>RIS No</b><br>
+<span id="viewRISNo"></span>
+</div>
+
+<div>
+<b>Requestor</b><br>
+<span id="viewRequestor"></span>
+</div>
+
+<div>
+<b>Division</b><br>
+<span id="viewDivision"></span>
+</div>
+
+<div>
+<b>Date</b><br>
+<span id="viewDate"></span>
+</div>
+
+</div>
+
+<div class="purposeBox">
+
+<b>Purpose</b><br>
+
+<span id="approvePurpose"></span>
+
+</div>
+
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Code</th>
+
+                    <th>Description</th>
+
+                    <th>Qty</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tblViewRISItems">
+
+            </tbody>
+
+        
+
+
+</table>
+
+<br>
+
+<div style="text-align:right;">
+
+<button
+style="background:#0d6efd;"
+onclick="printRIS()">
+
+🖨 Print RIS
+
+</button>
+
+<button
+style="background:#dc3545;"
+onclick="closeViewRIS()">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div id="approveRISModal" class="modal">
+
+<div class="modal-content" style="width:900px;">
+
+<span
+class="close"
+onclick="closeApproveModal()">
+
+&times;
+
+</span>
+
+<h2>✅ Approve RIS</h2>
+
+<hr>
+
+<p>
+
+<b>RIS No :</b>
+
+<span id="approveRISNo"></span>
+
+</p>
+
+<p>
+
+<b>Requestor :</b>
+
+<span id="approveRequestor"></span>
+
+</p>
+
+<p>
+
+<b>Division :</b>
+
+<span id="approveDivision"></span>
+
+</p>
+
+<p>
+
+<b>Purpose :</b>
+
+<span id="approvePurpose"></span>
+
+</p>
+
+<br>
+
+
+
+<div style="margin:15px 0;">
+
+<label style="font-weight:bold;">
+
+<input
+type="checkbox"
+id="chkAllItems"
+checked
+onclick="toggleAllApprovalItems()">
+
+Select All Items
+
+</label>
+
+</div>
+
+
+
+
+
+
+<br><br>
+
+<table>
+
+<thead>
+
+<th width="60" style="text-align:center;">✔</th>
+
+<th>
+
+Code
+
+</th>
+
+<th>
+
+Description
+
+</th>
+
+<th>
+
+Qty
+
+</th>
+
+<th>
+
+Available
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tblApproveItems">
+
+</tbody>
+
+</table>
+
+<br>
+
+<div style="text-align:right;">
+
+<button
+style="background:#198754;"
+onclick="approveSelectedItems()">
+
+✅ Approve Selected
+
+</button>
+
+<button
+style="background:#dc3545;"
+onclick="closeApproveModal()">
+
+Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
 </html>

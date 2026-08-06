@@ -3,7 +3,24 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Stock Card System</title>
+<title>Inventory Management System</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -531,38 +548,55 @@ box-shadow:0 6px 18px rgba(0,0,0,.08);
 }
 
 
+
+
+
 th{
 
-background:#003366;
+    background:#003366;
 
-color:white;
+    color:white;
 
-padding:16px;
+    padding:8px 10px;      /* from 16px → 8px */
 
-font-size:13px;
+    font-size:12px;        /* slightly smaller */
 
-letter-spacing:.5px;
+    letter-spacing:.5px;
 
-text-transform:uppercase;
+    text-transform:uppercase;
 
-position:sticky;
+    position:sticky;
 
-top:0;
+    top:0;
 
-z-index:5;
+    z-index:5;
 
 }
-
 
 td{
 
-padding:15px;
+    padding:6px 10px;      /* from 15px → 6px */
 
-border-bottom:1px solid #edf2f7;
+    border-bottom:1px solid #edf2f7;
 
-vertical-align:middle;
+    vertical-align:middle;
 
+    font-size:13px;
+
+    line-height:1.2;       /* tighter height */
 }
+
+
+
+
+
+tr {
+    height: 36px;
+}
+
+
+
+
 
 .modal{
 display:none;
@@ -587,7 +621,9 @@ z-index:10000;
 box-shadow:0 10px 30px rgba(0,0,0,.25);
 }
 
-
+.modal-content{
+    position:relative;
+}
 
 
 
@@ -1021,6 +1057,74 @@ background:#b52a37;
 
 
 
+.select2-container{
+    width:100% !important;
+}
+
+.select2-container--open{
+    z-index:999999 !important;
+}
+
+.select2-dropdown{
+    z-index:999999 !important;
+}
+
+
+.ris-info-table{
+
+width:100%;
+
+border-collapse:collapse;
+
+margin-bottom:15px;
+
+}
+
+.ris-info-table td{
+
+padding:10px 8px;
+
+border-bottom:1px solid #e5e5e5;
+
+font-size:14px;
+
+vertical-align:top;
+
+}
+
+.ris-info-table b{
+
+color:#0b2d5c;
+
+}
+
+.purposeBox{
+
+margin-top:15px;
+
+padding:12px;
+
+border:1px solid #ddd;
+
+border-radius:8px;
+
+background:#fafafa;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </style>
@@ -1131,7 +1235,7 @@ Management System
 
 
 <li onclick="showSection('sectionItemMaster')">
-📦 Item Master
+📦 Supply Inventory
 </li>
 
 
@@ -1140,19 +1244,36 @@ Management System
 
 
 <li onclick="showSection('sectionStockCard')">
-📒 Stock Card
+📒 Stock-in History
 </li>
 
-<li onclick="showSection('sectionPendingRequest')">
-📋 Pending Request
+<li onclick="showSection('sectionPendingRequest')" style="position:relative;">
+    📋 Pending RIS for Approval
+    <span id="pendingRequestBadge"
+          style="
+          display:none;
+          position:absolute;
+          right:12px;
+          top:8px;
+          background:red;
+          color:#fff;
+          border-radius:50%;
+          min-width:20px;
+          height:20px;
+          line-height:20px;
+          text-align:center;
+          font-size:11px;
+          font-weight:bold;">
+    </span>
 </li>
+
 
 <li onclick="showSection('sectionApprovedRequest')">
-✅ Approved Request
+✅ Approved RIS History
 </li>
 
-<li>
-📊 Reports
+<li onclick="showSection('sectionReports')">
+📊 RSMI Generator
 </li>
 
 
@@ -1514,7 +1635,7 @@ Management System
 
     <div>
 
-        <h2>📦 Item Master</h2>
+        <h2>📦 Supply Inventory and Balance Monitoring</h2>
 
         <small>
             Manage inventory items and monitor stock availability
@@ -1592,7 +1713,7 @@ Management System
 <div class="toolbar">
 
     <div>
-        <h2>📒 Stock Card</h2>
+        <h2>📒 Stockin Records History</h2>
         <small>Monitor stock movement and inventory balance</small>
     </div>
 
@@ -1863,7 +1984,7 @@ style="display:none;">
 
 <div class="toolbar">
 
-<h2>✅ Approved Request</h2>
+<h2>✅ Approved RIS History</h2>
 
 </div>
 
@@ -1899,6 +2020,95 @@ style="display:none;">
 
 
 
+
+
+<section id="sectionReports" style="display:none;">
+
+<div class="card" style="padding:25px;">
+
+<div style="display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;">
+    <div>
+        <h2 style="margin:0;">📊 RSMI MONTHY GENERATOR</h2>
+        <p style="margin:6px 0 0;color:#666;">
+            Report of Supplies and Materials Issued (RSMI)
+        </p>
+    </div>
+
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <label><b>Month:</b></label>
+        <input type="month" id="rsmiMonth">
+
+        <button onclick="openRSMIModal()"
+                style="background:#0b4a80;color:white;border:none;padding:10px 16px;border-radius:6px;font-weight:bold;">
+            🔎 Generate Report
+        </button>
+
+        <button onclick="openRSMIModal(true)"
+                style="background:#198754;color:white;border:none;padding:10px 16px;border-radius:6px;font-weight:bold;">
+            🖨 Print RSMI
+        </button>
+    </div>
+</div>
+
+<hr style="margin:20px 0;">
+
+<div id="rsmiSummary"
+     style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;"></div>
+
+<div id="rsmiReportContainer" style="background:white;overflow:auto;">
+    <div style="padding:40px;text-align:center;color:#777;">
+        Select a month, then click <b>Generate Report</b>.
+    </div>
+</div>
+
+</div>
+</section>
+
+
+<!-- ============================================================
+     RSMI PREVIEW / PRINT MODAL
+     ============================================================ -->
+<div id="rsmiModal"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);
+            z-index:99999;padding:20px;box-sizing:border-box;">
+
+    <div style="background:white;width:96%;height:94%;margin:auto;border-radius:10px;
+                box-shadow:0 10px 40px rgba(0,0,0,.35);display:flex;
+                flex-direction:column;overflow:hidden;">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;
+                    padding:12px 18px;background:#073f73;color:white;gap:10px;">
+
+            <div style="font-size:18px;font-weight:700;">
+                📄 RSMI - FORMAT
+            </div>
+
+            <div style="display:flex;gap:8px;align-items:center;">
+
+                <button type="button"
+                        onclick="window.printRSMIPreview()"
+                        style="background:#198754;color:white;border:0;
+                               padding:9px 16px;border-radius:6px;
+                               font-weight:bold;cursor:pointer;">
+                    🖨 PRINT
+                </button>
+
+                <button type="button"
+                        onclick="window.closeRSMIModal()"
+                        style="background:#dc3545;color:white;border:0;
+                               padding:9px 16px;border-radius:6px;
+                               font-weight:bold;cursor:pointer;">
+                    ✕ CLOSE
+                </button>
+            </div>
+        </div>
+
+        <div id="rsmiModalBody"
+             style="flex:1;overflow:auto;background:#e9edf2;padding:18px;">
+        </div>
+
+    </div>
+</div>
 
 <section id="sectionUserManagement" style="display:none;">
 
@@ -2123,6 +2333,17 @@ id="stockDate">
 
 </select>
 
+
+<label>Unit Price</label>
+
+<input
+type="number"
+id="stockUnitPrice"
+step="0.01"
+placeholder="Enter Unit Price">
+
+
+
 <label>Quantity</label>
 
 <input
@@ -2220,6 +2441,12 @@ style="width:100%;height:70px;"></textarea>
 
 <select id="risItem"></select>
 
+
+<input
+type="text"
+id="risUnit"
+placeholder="Unit (pcs, box, bottle, etc.)">
+
 <input
 type="number"
 id="risQty"
@@ -2244,7 +2471,7 @@ onclick="addRISItem()">
 <th>Item</th>
 
 <th>Qty</th>
-
+ <th>UNIT</th>
 <th>Action</th>
 
 </tr>
@@ -2312,11 +2539,70 @@ type="text"
 id="userPosition"
 placeholder="Enter Position">
 
+
 <label>Division</label>
+
+<select id="userDivision">
+
+    <optgroup label="ADMIN DIVISION">
+        <option>HUMAN RESOURCE</option>
+        <option>ACCOUNTING</option>
+        <option>BUDGET</option>
+        <option>CASHIER</option>
+        <option>SUPPLY</option>
+        <option>SCHOLARSHIP</option>
+        <option>MAINTENANCE</option>
+    </optgroup>
+
+    <optgroup label="OFFICE OF THE REGIONAL DIRECTOR">
+        <option>ORD-OFFICE</option>
+        <option>ORD (DBL)</option>
+        <option>ORD (AMCEN)</option>
+        <option>ORD (SARAI)</option>
+        <option>ORD (GAD)</option>
+        <option>ORD (MIS)</option>
+    </optgroup>
+
+    <optgroup label="TECHNICAL OPERATION SERVICES">
+        <option>TOS-OFFICE</option>
+        <option>TOS (SETUP)</option>
+        <option>TOS (TECHGROW)</option>
+        <option>TOS (CEST)</option>
+        <option>TOS (INFORMATION)</option>
+        <option>TOS (TRAINING)</option>
+        <option>RML</option>
+        <option>RSTL</option>
+    </optgroup>
+
+    <optgroup label="PROVINCIAL OFFICES">
+        <option>PSTO - BATANES</option>
+        <option>PSTO - CAGAYAN</option>
+        <option>PSTO - ISABELA</option>
+        <option>PSTO - NUEVA VIZCAYA</option>
+        <option>PSTO - QUIRINO</option>
+    </optgroup>
+
+    <optgroup label="OTHER">
+    <option>COA</option>
+    <option value="OTHERS">OTHERS</option>
+</optgroup>
+
+</select>
+
+
 <input
-type="text"
-id="userDivision"
-placeholder="Enter Division">
+    type="text"
+    id="otherDivision"
+    placeholder="Enter Division"
+    style="display:none;margin-top:10px;">
+
+
+
+
+
+
+
+
 
 <label>Username</label>
 
@@ -2363,6 +2649,80 @@ Close
 </div>
 
 
+
+
+
+
+<!-- ========================= -->
+<!-- STOCK CARD MODAL -->
+<!-- ========================= -->
+
+<div class="modal" id="stockCardModal">
+
+<div
+class="modal-content"
+style="
+width:95%;
+height:92vh;
+overflow:auto;
+">
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+">
+
+<h2>📄 STOCK CARD</h2>
+
+<div>
+
+<button
+onclick="printStockCard()"
+style="background:#198754;">
+🖨 Print
+</button>
+
+<button
+onclick="closeStockCard()"
+style="background:#dc3545;">
+Close
+</button>
+
+</div>
+
+</div>
+
+<div id="stockCardContent">
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script type="module">
@@ -2379,7 +2739,8 @@ deleteDoc,
 doc,
 query,
 where,
-getDoc
+getDoc,
+onSnapshot
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
@@ -2424,7 +2785,7 @@ let editIndex = -1;
 
 let users = [];
 
-
+let employeeSignature = "";
 
 function showSection(sectionId){
 
@@ -2466,6 +2827,7 @@ function showSection(sectionId){
         "sectionEmployeeDetails",
         "sectionPendingRequest",
         "sectionApprovedRequest",
+        "sectionReports",
         "sectionUserManagement"
 
     ];
@@ -2575,10 +2937,12 @@ async function loginUser(){
     document.getElementById("loginBox").style.display="none";
     document.getElementById("mainSystem").style.display="block";
 
-    await loadItems();
+await loadItems();
 await loadRIS();
 await loadStockCard();
 await loadUsers();
+
+loadEmployeeDetails();
 
 applyUserRole();
 
@@ -2611,12 +2975,24 @@ window.onload = async function(){
         document.getElementById("loginBox").style.display="none";
         document.getElementById("mainSystem").style.display="block";
 
-        await loadItems();
+       
+
+await loadItems();
 await loadRIS();
 await loadStockCard();
 await loadUsers();
 
+loadEmployeeDetails();
+
 applyUserRole();
+
+
+
+
+
+
+
+
 
 const currentUser =
 JSON.parse(localStorage.getItem("currentUser"));
@@ -2699,50 +3075,37 @@ function applyUserRole(){
 
     if(!currentUser) return;
 
-    const menus =
-        document.querySelectorAll(".sidebar li");
+    const isAdmin =
+        (currentUser.role || "").toUpperCase() === "ADMIN";
 
-    // ADMIN
-    if((currentUser.role || "").toUpperCase() === "ADMIN"){
+    const menus = document.querySelectorAll(".sidebar li");
+
+    if(isAdmin){
 
         menus.forEach(menu=>{
-            menu.style.display="";
+            menu.style.display="flex";
         });
 
         return;
-
     }
 
     // USER
     menus.forEach(menu=>{
 
-        menu.style.display="none";
+        const onclick = menu.getAttribute("onclick") || "";
+
+        if(
+            onclick.includes("sectionRIS") ||
+            onclick.includes("sectionEmployeeDetails")
+        ){
+            menu.style.display="flex";
+        }else{
+            menu.style.display="none";
+        }
 
     });
 
-    
-
-
-// USER MENUS
-menus.forEach(menu=>{
-
-    const text = menu.textContent.trim();
-
-    if(
-        text.includes("RIS") ||
-        text.includes("Employee Details")
-    ){
-
-        menu.style.display="flex";
-
-    }
-
-});
-
-
-
 }
-
 
 
 
@@ -2810,6 +3173,91 @@ ${i.code} - ${i.description}
 stockItem.innerHTML=html;
 
 
+// ===================================
+// AUTO LOAD UNIT FROM INVENTORY
+// ===================================
+
+if(items.length){
+
+    const firstIndex = Number(stockItem.value);
+
+    if(items[firstIndex]){
+
+        document.getElementById("stockUnit").value =
+        items[firstIndex].unit || "";
+
+        const history = stockCard
+            .filter(x =>
+                x.code === items[firstIndex].code &&
+                x.type === "STOCK IN"
+            )
+            .sort((a,b)=>
+                new Date(b.date) - new Date(a.date)
+            );
+
+        if(history.length){
+
+            document.getElementById("stockUnitPrice").value =
+            history[0].unitPrice || "";
+
+        }else{
+
+            document.getElementById("stockUnitPrice").value = "";
+
+        }
+
+    }
+
+}
+
+
+
+
+
+stockItem.onchange = function(){
+
+    const index = Number(this.value);
+
+    if(!items[index]) return;
+
+    // AUTO UNIT
+    document.getElementById("stockUnit").value =
+    items[index].unit || "";
+
+    // AUTO LAST PURCHASE PRICE
+    const history = stockCard
+        .filter(x =>
+            x.code === items[index].code &&
+            x.type === "STOCK IN"
+        )
+        .sort((a,b)=>
+            new Date(b.date) - new Date(a.date)
+        );
+
+    if(history.length){
+
+        document.getElementById("stockUnitPrice").value =
+        history[0].unitPrice || "";
+
+    }else{
+
+        document.getElementById("stockUnitPrice").value = "";
+
+    }
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
 document.getElementById("stockDate").value =
 new Date().toISOString().split("T")[0];
 
@@ -2838,6 +3286,135 @@ document.getElementById("stockInModal").style.display="none";
 
 window.closeStockInModal = closeStockInModal;
 
+function viewStockCard(itemCode){
+    const item = items.find(x=>x.code==itemCode);
+    if(!item) return;
+
+    document.getElementById("stockCardContent").innerHTML=`
+<h1 style="text-align:center;margin-bottom:20px;">STOCK CARD</h1>
+<table border="1" style="width:100%;border-collapse:collapse;">
+<tr><td><b>Entity Name</b></td><td>DOST RO II</td><td><b>Fund Cluster</b></td><td>01</td></tr>
+<tr><td><b>Item</b></td><td>${item.description}</td><td><b>Stock No.</b></td><td>${item.code}</td></tr>
+<tr><td><b>Unit</b></td><td>${item.unit}</td><td><b>Re-order Point</b></td><td>${item.minimum}</td></tr>
+</table>
+<br><br>
+<h3 style="margin-top:20px;">STOCK MOVEMENT</h3>
+<table border="1" style="width:100%;border-collapse:collapse;font-size:13px;">
+<thead>
+<tr style="background:#efefef;">
+<th rowspan="2">Date</th><th colspan="2">Receipt</th><th colspan="2">Issue</th><th rowspan="2">Balance</th>
+</tr>
+<tr><th>Reference</th><th>Qty</th><th>Office</th><th>Qty</th></tr>
+</thead>
+<tbody id="stockCardBody"></tbody>
+</table>
+`;
+
+    let movements = [];
+
+    // 1st record = original Beginning Balance.
+    const beginningQty = Number(item.initialBalance ?? item.beginningBalance ?? item.balance ?? 0);
+    const beginningDate = item.createdDate || item.dateCreated || "";
+    movements.push({
+        date: beginningDate ? new Date(beginningDate + "T00:00:00") : new Date(0),
+        dateText: beginningDate || "",
+        type:"BEGINNING",
+        
+
+	reference:"Beginning",
+        office:"",
+        qtyIn:beginningQty,
+        qtyOut:0,
+        isBeginning:true
+    });
+
+
+
+
+    // Stock In: use actual received/stocked-in date.
+    stockCard.filter(r=>r.code==itemCode).forEach(r=>{
+        const d = r.stockedInDate || r.receivedDate || r.datePurchased || r.date || "";
+        movements.push({
+            date: d ? new Date(d + (String(d).length===10 ? "T00:00:00" : "")) : new Date(0),
+            dateText: r.stockedInDate || r.receivedDate || r.datePurchased || r.date || "",
+            type:"RECEIPT",
+            
+reference:
+r.unitPrice
+? "₱" + Number(r.unitPrice).toLocaleString("en-US",{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+})
+: "PURCHASE",
+
+            office:"",
+            qtyIn:Number(r.qtyIn||0),
+            qtyOut:0
+        });
+    });
+
+
+
+
+    // RIS Issue: use RIS issue/transaction date.
+    ris.filter(r=>r.status=="APPROVED").forEach(r=>{
+        r.items.forEach(x=>{
+            const itemData=items[x.item];
+            if(!itemData || itemData.code!=itemCode) return;
+            const d = r.issueDate || r.risDate || r.date || "";
+            movements.push({
+                date: d ? new Date(d + (String(d).length===10 ? "T00:00:00" : "")) : new Date(0),
+                dateText: r.issueDate || r.risDate || r.date || "",
+                type:"ISSUE",
+                reference:r.risNo || "",
+                office:r.division || "",
+                qtyIn:0,
+                qtyOut:Number(x.qty)
+            });
+        });
+    });
+
+    movements.sort((a,b)=>{
+        const diff=a.date-b.date;
+        if(diff!==0) return diff;
+        if(a.isBeginning && !b.isBeginning) return -1;
+        if(!a.isBeginning && b.isBeginning) return 1;
+        return 0;
+    });
+
+    let balance=0, html="";
+    movements.forEach(m=>{
+        balance += m.qtyIn;
+        balance -= m.qtyOut;
+        html+=`<tr>
+<td>${m.dateText}</td><td>${m.reference}</td>
+<td align="center">${m.qtyIn==0 ? "" : m.qtyIn}</td>
+<td>${m.office}</td><td align="center">${m.qtyOut==0 ? "" : m.qtyOut}</td>
+<td align="center">${balance}</td></tr>`;
+    });
+
+    document.getElementById("stockCardBody").innerHTML=html;
+    document.getElementById("stockCardModal").style.display="block";
+}
+
+function closeStockCard(){
+
+document.getElementById("stockCardModal").style.display="none";
+
+}
+
+window.closeStockCard=closeStockCard;
+
+
+
+function printStockCard(){
+
+window.print();
+
+}
+
+window.printStockCard=printStockCard;
+
 
 
 
@@ -2864,19 +3441,16 @@ return;
 
 
 let obj={
-
 code:code.value,
-
 description:desc.value,
-
 unit:unit.value,
-
 category:cat.value,
 price:Number(document.getElementById("itemPrice").value),
 balance:Number(bal.value),
-
-minimum:Number(min.value)
-
+minimum:Number(min.value),
+initialBalance:Number(bal.value),
+beginningBalance:Number(bal.value),
+createdDate:new Date().toISOString().split("T")[0]
 };
 
 if(editIndex==-1){
@@ -2923,6 +3497,430 @@ window.saveItem = saveItem;
 
 
 
+
+
+
+// ============================================================
+// RSMI REPORT GENERATOR
+// Approved requests only; grouped by Division alphabetically.
+// All items belonging to the same RIS/request stay together.
+// ============================================================
+
+function rsmiGetDate(r){
+    return r.issueDate || r.risDate || r.date || "";
+}
+
+function rsmiMonthKey(value){
+    if(!value) return "";
+    const s = String(value);
+
+    if(/^\d{4}-\d{2}-\d{2}/.test(s)){
+        return s.substring(0,7);
+    }
+
+    const d = new Date(s);
+    if(isNaN(d)) return "";
+
+    return d.getFullYear() + "-" +
+           String(d.getMonth()+1).padStart(2,"0");
+}
+
+function rsmiFormatDate(value){
+    if(!value) return "";
+
+    const d = new Date(
+        /^\d{4}-\d{2}-\d{2}$/.test(String(value))
+        ? String(value) + "T00:00:00"
+        : value
+    );
+
+    if(isNaN(d)) return String(value);
+
+    return d.toLocaleDateString("en-US",{
+        month:"2-digit",
+        day:"2-digit",
+        year:"numeric"
+    });
+}
+
+function rsmiEscape(value){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+
+// ==========================================
+// RSMI PAGE SETTINGS
+// ==========================================
+
+const RSMI_ROWS_PER_PAGE = 14;
+
+const rsmiPages = [];
+
+// ==========================================
+// SPLIT ROWS INTO PAGES
+// ==========================================
+
+function splitRowsIntoPages(rows){
+
+    const pages = [];
+
+    let currentPage = [];
+
+    rows.forEach(row=>{
+
+        if(currentPage.length >= RSMI_ROWS_PER_PAGE){
+
+            pages.push(currentPage);
+
+            currentPage = [];
+
+        }
+
+        currentPage.push(row);
+
+    });
+
+    if(currentPage.length){
+
+        pages.push(currentPage);
+
+    }
+
+    return pages;
+
+}
+
+
+// ==========================================
+// CREATE ONE RSMI PAGE
+// ==========================================
+
+function createRSMIPage(rows,pageNo,totalPages){
+
+    return `
+
+<div class="rsmi-page"
+style="
+width:190mm;
+height:277mm;
+border:2px solid #000;
+box-sizing:border-box;
+padding:8mm;
+margin:0 auto 10mm auto;
+position:relative;
+background:#fff;
+page-break-after:always;
+display:flex;
+flex-direction:column;
+">
+
+    <div class="rsmi-page-header">
+
+        <div style="text-align:right;font-size:11px;">
+            Page ${pageNo} of ${totalPages}
+        </div>
+
+        <h3 style="
+        text-align:center;
+        margin:5px 0;
+        ">
+        REPORT OF SUPPLIES AND MATERIALS ISSUED
+        </h3>
+
+        <table
+        style="
+        width:100%;
+        border-collapse:collapse;
+        font-size:11px;
+        ">
+
+            <tr>
+
+                <td style="border:1px solid #000;padding:4px;">
+                    <b>Entity Name :</b> DOST-RO2
+                </td>
+
+                <td style="border:1px solid #000;padding:4px;">
+                    <b>Serial No.</b>
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td style="border:1px solid #000;padding:4px;">
+                    <b>Fund Cluster :</b> 101
+                </td>
+
+                <td style="border:1px solid #000;padding:4px;">
+                    <b>Date :</b>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+
+
+
+  <div
+class="rsmi-page-body"
+style="
+flex:1;
+margin-top:10px;
+margin-bottom:10px;
+">
+
+${rows.join("")}
+
+</div>
+
+
+
+<div
+class="rsmi-page-footer"
+style="
+margin-top:auto;
+">
+   
+
+        <table
+        style="
+        width:100%;
+        border-collapse:collapse;
+        font-size:11px;
+        margin-top:15px;
+        ">
+
+            <tr>
+
+                <td
+                style="
+                border:1px solid #000;
+                height:80px;
+                width:50%;
+                vertical-align:top;
+                padding:5px;
+                ">
+
+                    <b>Recapitulation</b>
+
+                </td>
+
+                <td
+                style="
+                border:1px solid #000;
+                vertical-align:top;
+                padding:5px;
+                ">
+
+                    <b>Recapitulation</b>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td
+                style="
+                border:1px solid #000;
+                height:90px;
+                ">
+
+                </td>
+
+                <td
+                style="
+                border:1px solid #000;
+                ">
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
+
+`;
+
+}
+
+
+
+
+
+
+function generateRSMIReport(){
+    const monthInput=document.getElementById("rsmiMonth");
+    if(!monthInput.value){const now=new Date();monthInput.value=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");}
+    const selectedMonth=monthInput.value;
+    const approved=(ris||[]).filter(r=>String(r.status||"").toUpperCase()==="APPROVED"&&rsmiMonthKey(rsmiGetDate(r))===selectedMonth);
+    const groups={};
+    approved.forEach(r=>{const d=String(r.division||"UNASSIGNED").trim()||"UNASSIGNED";(groups[d]||(groups[d]=[])).push(r);});
+    const divisions=Object.keys(groups).sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:"base"}));
+    divisions.forEach(d=>groups[d].sort((a,b)=>{const da=new Date(rsmiGetDate(a)||0).getTime(),db=new Date(rsmiGetDate(b)||0).getTime();return da!==db?da-db:String(a.id||"").localeCompare(String(b.id||""),undefined,{numeric:true,sensitivity:"base"});}));
+    const md=new Date(selectedMonth+"-01T00:00:00");
+    const monthName=isNaN(md)?selectedMonth:md.toLocaleDateString("en-US",{month:"long",year:"numeric"});
+    const serialDate=new Date().toLocaleDateString("en-CA");
+    let totalRequests=0,totalItems=0,grandAmount=0;
+
+let reportRows = [];
+
+
+
+
+
+
+
+    let html=`<style>
+.rsmi-report{width:100%;min-width:0;color:#000;font-family:Arial,Helvetica,sans-serif}.rsmi-header{text-align:center;line-height:1.25;margin-bottom:8px}.rsmi-header h3{margin:2px 0;font-size:13px}.rsmi-meta,.rsmi-fillup,.rsmi-signatures{width:100%;border-collapse:collapse;font-size:9px}.rsmi-meta td,.rsmi-fillup td,.rsmi-signatures td{border:1px solid #000;padding:3px 5px}.rsmi-fillup td{text-align:center;font-style:italic}.rsmi-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:8px}.rsmi-table th,.rsmi-table td{border:1px solid #000;padding:2px 3px;vertical-align:top}.rsmi-table th{background:white!important;text-align:center;vertical-align:middle;font-weight:bold}.rsmi-table th:nth-child(1){width:7%}.rsmi-table th:nth-child(2){width:14%}.rsmi-table th:nth-child(3){width:12%}.rsmi-table th:nth-child(4){width:25%}.rsmi-table th:nth-child(5){width:7%}.rsmi-table th:nth-child(6){width:9%}.rsmi-table th:nth-child(7){width:11%}.rsmi-table th:nth-child(8){width:15%}.rsmi-center{text-align:center;vertical-align:middle!important;font-weight:bold}.rsmi-qty,.rsmi-money{text-align:right}.rsmi-subtotal td,.rsmi-grand td{font-weight:bold;background:white!important}.rsmi-signatures td{height:105px;vertical-align:top}.rsmi-empty{padding:45px!important;text-align:center;color:#777}@media print{tr{page-break-inside:avoid}}</style>
+<div class="rsmi-report"><div class="rsmi-header"><h3>REPORT OF SUPPLIES AND MATERIALS ISSUED</h3></div>
+<table class="rsmi-meta"><tr><td style="width:50%"><b>Entity Name :</b> DOST - RO2</td><td style="width:50%"><b>Serial No.</b> ${rsmiEscape(serialDate)}</td></tr><tr><td><b>Fund Cluster :</b> 101</td><td><b>Date :</b> ${rsmiEscape(monthName)}</td></tr></table>
+<table class="rsmi-fillup"><tr><td style="width:50%">To be filled up by the supply and/or Property Division/Unit</td><td style="width:50%">To be filled up by the Account Division/Unit</td></tr></table>`;
+    if(!divisions.length){
+        html+=`<table class="rsmi-table"><thead><tr><th>RIS No.</th><th>Responsibility<br>Center Code</th><th>Stock No.</th><th>Item</th><th>Unit</th><th>Quantity<br>Issued</th><th>Unit Cost</th><th>Amount</th></tr></thead><tbody><tr><td colspan="8" class="rsmi-empty">No APPROVED requests were found for <b>${rsmiEscape(monthName)}</b>.</td></tr></tbody></table></div>`;
+        document.getElementById("rsmiReportContainer").innerHTML=html;
+        document.getElementById("rsmiSummary").innerHTML=`<div style="padding:12px 18px;background:#eef5fb;border-radius:8px"><b>Divisions:</b> 0</div><div style="padding:12px 18px;background:#eef5fb;border-radius:8px"><b>Approved RIS:</b> 0</div><div style="padding:12px 18px;background:#eef5fb;border-radius:8px"><b>Items:</b> 0</div>`;return;
+    }
+    html+=`<table class="rsmi-table"><thead><tr><th>RIS No.</th><th>Responsibility<br>Center Code</th><th>Stock No.</th><th>Item</th><th>Unit</th><th>Quantity<br>Issued</th><th>Unit Cost</th><th>Amount</th></tr></thead><tbody>`;
+    divisions.forEach(division=>groups[division].forEach(r=>{
+        totalRequests++;const rows=Array.isArray(r.items)?r.items:[];if(!rows.length)return;
+        rows.forEach((x,i)=>{totalItems++;const item=(items||[])[x.item]||{},qty=Number(x.qty||0),unitCost=Number(item.price??x.unitCost??0),amount=qty*unitCost;grandAmount+=amount;
+            html+=`<tr>
+
+<td class="rsmi-center">
+    ${i===0 ? rsmiEscape(r.id || "") : ""}
+</td>
+
+<td class="rsmi-center">
+    ${i===0 ? rsmiEscape(division) : ""}
+</td>
+
+<td>${rsmiEscape(item.code||x.code||"")}</td><td>${rsmiEscape(item.description||x.description||"")}</td><td class="rsmi-center">${rsmiEscape(item.unit||x.unit||"")}</td><td class="rsmi-qty">${qty}</td><td class="rsmi-money">${unitCost.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td class="rsmi-money">${amount.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</td></tr>`;
+        });
+    }));
+    html+=`<tr class="rsmi-subtotal"><td colspan="7" style="text-align:right">SUB-TOTAL</td><td class="rsmi-money">${grandAmount.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</td></tr></tbody></table>
+<table class="rsmi-meta" style="margin-top:0"><tr><td style="width:50%;text-align:center;font-weight:bold">Recapitulation :</td><td style="width:50%;text-align:center;font-weight:bold">Recapitulation :</td></tr><tr><td style="height:65px;vertical-align:top"><b>Stock No.</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Quality</b></td><td style="height:65px;vertical-align:top"><b>Unit Cost</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Total Cost</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>UACS Object Code</b></td></tr></table>
+<table class="rsmi-signatures"><tr><td style="width:58%">I hereby to the correctness of the above Information<br><br><br><br><div style="text-align:center;font-weight:bold">ALDWIN T. CRUZ / LUZVIMINDA B. BUCAYU</div><div style="text-align:center">Signature over Printed Name of Supply Officer and/or<br>Property Custodian</div></td><td style="width:42%"><b>Posted by :</b><br><br><br><br><div style="text-align:center">______________________________</div><div style="text-align:center">Signature over Printed Name of<br>Designated Accounting Staff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date</div></td></tr></table></div>`;
+    document.getElementById("rsmiReportContainer").innerHTML=html;
+    document.getElementById("rsmiSummary").innerHTML=`<div style="padding:12px 18px;background:#eef5fb;border-radius:8px"><b>Divisions:</b> ${divisions.length}</div><div style="padding:12px 18px;background:#eef5fb;border-radius:8px"><b>Approved RIS:</b> ${totalRequests}</div><div style="padding:12px 18px;background:#eef5fb;border-radius:8px"><b>Items:</b> ${totalItems}</div><div style="padding:12px 18px;background:#e8f5e9;border-radius:8px"><b>Total Amount:</b> ₱${grandAmount.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</div>`;
+}
+
+function printRSMIReport(){
+
+    const report = document.getElementById("rsmiReportContainer");
+
+    if(!report || !report.innerHTML.trim()){
+        alert("Generate the RSMI report first.");
+        return;
+    }
+
+    const month =
+        document.getElementById("rsmiMonth")?.value || "";
+
+
+
+
+
+const win = window.open("", "_blank");
+
+const styles = Array.from(document.querySelectorAll("style"))
+.map(s => s.outerHTML)
+.join("");
+
+if(!win){
+    alert("Please allow pop-ups for this report.");
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+
+    win.document.write(`
+<!DOCTYPE html>
+<html>
+
+
+
+
+<head>
+<meta charset="UTF-8">
+<title>RSMI ${rsmiEscape(month)}</title>
+
+<style>
+
+@page{
+    size:A4 landscape;
+    margin:8mm;
+}
+
+body{
+    margin:0;
+    background:white;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+#rsmiModalBody{
+    padding:0 !important;
+    background:white !important;
+}
+
+*{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+}
+
+</style>
+
+</head>
+
+
+
+
+<body>
+
+<div id="rsmiModalBody">
+${document.getElementById("rsmiModalBody").innerHTML}
+</div>
+
+</body>
+
+
+
+
+
+
+
+
+
+</html>`);
+
+    win.document.close();
+
+    setTimeout(()=>{
+        win.focus();
+        win.print();
+    },500);
+}
 
 
 async function loadItems(){
@@ -3061,17 +4059,25 @@ i.balance<=i.minimum
 <td>${i.minimum}</td>
 
 
+
 <td>
 
-<button class="btnEdit"
+<button
+class="btnEdit"
 onclick="confirmEdit(${index})">
-
 ✏ Edit
+</button>
 
+<button
+style="
+background:#198754;
+margin-left:5px;
+"
+onclick="viewStockCard('${i.code}')">
+📄 View Stock
 </button>
 
 </td>
-
 
 
 
@@ -3147,7 +4153,7 @@ function confirmEdit(index){
 window.confirmEdit = confirmEdit;
 
 
-
+window.viewStockCard = viewStockCard;
 
 
 
@@ -3180,12 +4186,26 @@ async function saveStockIn(){
     let index = Number(stockItem.value);
     let qty = Number(stockQty.value);
 
-    if(qty <= 0){
+let unitPrice = Number(document.getElementById("stockUnitPrice").value);
 
-        alert("Enter a valid quantity.");
-        return;
+if(qty <= 0){
 
-    }
+    alert("Enter a valid quantity.");
+    return;
+
+}
+
+if(unitPrice <= 0){
+
+    alert("Please enter a valid Unit Price.");
+
+    document.getElementById("stockUnitPrice").focus();
+
+    return;
+
+}
+
+    
 
     let newBalance = items[index].balance + qty;
 
@@ -3201,17 +4221,24 @@ async function saveStockIn(){
 
    
 
+const receivedDate = document.getElementById("stockDate").value;
+
 await addDoc(collection(db,"stockCard"),{
 
-    date:new Date().toLocaleDateString(),
+    date:receivedDate,
 
-    datePurchased: document.getElementById("stockDate").value,
+    stockedInDate:receivedDate,
+
+    datePurchased:receivedDate,
 
     code:items[index].code,
 
     description:items[index].description,
 
-    unit: document.getElementById("stockUnit").value,
+    unit:document.getElementById("stockUnit").value,
+
+    // PURCHASE PRICE NG DELIVERY
+    unitPrice:Number(document.getElementById("stockUnitPrice").value),
 
     type:"STOCK IN",
 
@@ -3225,21 +4252,26 @@ await addDoc(collection(db,"stockCard"),{
 
 
 
+await loadItems();
+loadStockCard();
+
+stockQty.value = "";
+document.getElementById("stockUnitPrice").value = "";
+
+// Optional: i-reset sa current date ulit
+document.getElementById("stockDate").value =
+new Date().toISOString().split("T")[0];
+
+closeStockInModal();
+
+alert("Stock received successfully!");
 
 
 
 
 
 
-
-    await loadItems();
-    loadStockCard();
-
-    stockQty.value="";
-
-    closeStockInModal();
-
-    alert("Stock received successfully!");
+   
 
 }
 
@@ -3326,20 +4358,55 @@ function openRISModal(){
 
     }
 
-    let html="";
+    let html = "";
 
-    items.forEach((i,index)=>{
+// Arrange alphabetically by Description
+const sortedItems = [...items].sort((a, b) =>
+    a.description.localeCompare(b.description)
+);
 
-        html+=`
-        <option value="${index}">
-            ${i.code} - ${i.description}
-            (Balance : ${i.balance})
+sortedItems.forEach(item => {
+
+    // Kunin ang original index ng item
+    const originalIndex = items.findIndex(x => x.id === item.id);
+
+    html += `
+        <option value="${originalIndex}">
+            ${item.description} (Balance: ${item.balance})
         </option>
-        `;
+    `;
 
-    });
+});
 
-    risItem.innerHTML = html;
+
+
+risItem.innerHTML = html;
+
+// ================================
+// AUTO LOAD UNIT FROM INVENTORY
+// ================================
+if(items.length){
+
+    document.getElementById("risUnit").value =
+    items[Number(risItem.value)].unit || "";
+
+}
+
+risItem.onchange = function(){
+
+    const index = Number(this.value);
+
+    if(items[index]){
+
+        document.getElementById("risUnit").value =
+        items[index].unit || "";
+
+    }
+
+};
+
+
+
 
     const currentUser =
     JSON.parse(localStorage.getItem("currentUser"));
@@ -3374,7 +4441,24 @@ function openRISModal(){
 
     }
 
-    document.getElementById("risModal").style.display="block";
+    document.getElementById("risModal").style.display = "block";
+
+// Destroy previous Select2
+if ($("#risItem").hasClass("select2-hidden-accessible")) {
+    $("#risItem").select2("destroy");
+}
+
+// Hintayin munang lumabas ang modal
+setTimeout(() => {
+
+    $("#risItem").select2({
+    dropdownParent: $("#risModal .modal-content"),
+    width: "100%",
+    placeholder: "Search Supply...",
+    dropdownAutoWidth: true
+});
+
+}, 50);
 
 }
 
@@ -3430,6 +4514,7 @@ function addRISItem(){
 let index = Number(risItem.value);
 
 let qty = Number(risQty.value);
+let unit = document.getElementById("risUnit").value;
 
 if(qty<=0){
 
@@ -3439,13 +4524,70 @@ return;
 
 }
 
-if(qty>items[index].balance){
 
-alert("Insufficient Stock!");
 
-return;
+
+const available = Number(items[index].balance);
+const minimum = Number(items[index].minimum);
+
+
+// OUT OF STOCK
+if (available <= 0) {
+
+    alert("❌ This item is OUT OF STOCK.");
+
+    return;
 
 }
+
+// REQUEST EXCEEDS AVAILABLE
+
+
+if (qty > available) {
+
+    alert(
+        `❌ Requested quantity exceeds available stock.\n\n` +
+        `Available Stock : ${available}\n` +
+        `Requested Qty   : ${qty}`
+    );
+
+    return;
+
+}
+
+const remaining = available - qty;
+
+// BELOW MINIMUM STOCK
+if (remaining < minimum) {
+
+    alert(
+`⚠️ Request cannot be submitted.
+
+This request will reduce the inventory below the minimum stock level.
+
+Item            : ${items[index].description}
+Available Stock : ${available}
+Minimum Level   : ${minimum}
+Requested Qty   : ${qty}
+Remaining Stock : ${remaining}
+
+Please reduce the requested quantity.`
+    );
+
+    return;
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 // Check duplicate item
 let exist = risItems.find(x=>x.item==index);
@@ -3457,11 +4599,9 @@ exist.qty += qty;
 }else{
 
 risItems.push({
-
-item:index,
-
-qty:qty
-
+    item:index,
+    qty:qty,
+    unit:unit
 });
 
 }
@@ -3476,6 +4616,64 @@ window.addRISItem = addRISItem;
 
 
 async function saveRIS(){
+
+
+
+// ===============================
+// AUTO GENERATE RIS NUMBER
+// FORMAT: YYYY-MM-001
+// Reset every YEAR only
+// ===============================
+
+const today = new Date();
+
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, "0");
+
+// Hanapin ang pinakamataas na number ng current year
+const risSnapshot = await getDocs(collection(db, "ris"));
+
+let lastNumber = 0;
+
+risSnapshot.forEach(doc => {
+
+    const data = doc.data();
+
+    if(data.risNo){
+
+    const parts = data.risNo.split("-");
+
+    if(parts.length === 3 && Number(parts[0]) === year){
+
+        const no = Number(parts[2]);
+
+        if(!isNaN(no) && no > lastNumber){
+
+            lastNumber = no;
+
+        }
+
+    }
+
+}
+});
+
+const nextNumber =
+String(lastNumber + 1).padStart(3,"0");
+
+const risNo =
+`${year}-${month}-${nextNumber}`;
+
+
+
+
+
+
+
+
+
+
+
 
 if(risItems.length==0){
 
@@ -3495,12 +4693,51 @@ console.log(risDivision.value);
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
+
+
+for(const x of risItems){
+
+    const available = Number(items[x.item].balance);
+
+    if(available <= 0){
+
+        alert(
+            `❌ ${items[x.item].description} is OUT OF STOCK.`
+        );
+
+        return;
+
+    }
+
+    if(x.qty > available){
+
+        alert(
+            `❌ ${items[x.item].description}\n\n` +
+            `Available : ${available}\n` +
+            `Requested : ${x.qty}`
+        );
+
+        return;
+
+    }
+
+}
+
+
+
+
+
+
 await addDoc(collection(db,"ris"),{
 
-id:"RIS-"+Date.now(),
 
-date:new Date().toLocaleDateString(),
 
+date:new Date().toISOString().split("T")[0],
+        risDate:new Date().toISOString().split("T")[0],
+        issueDate:new Date().toISOString().split("T")[0],
+        id: risNo,
+
+risNo: risNo,
 requestor:
 document.getElementById("risRequestor").value,
 
@@ -3565,33 +4802,50 @@ alert("RIS submitted successfully!");
 
 window.saveRIS = saveRIS;
 
-
-
 async function loadRIS(){
 
-let html = "";
-let htmlRIS = "";
+    onSnapshot(collection(db,"ris"), (snapshot)=>{
+
+        ris=[];
+
+        snapshot.forEach(docSnap=>{
+            ris.push({
+                docId:docSnap.id,
+                ...docSnap.data()
+            });
+        });
+
+        renderRIS();
+
+    });
+
+}
+
+
+function renderRIS() {
+
+    let html = "";
+    let htmlRIS = "";
 
 
 
 
-const snapshot = await getDocs(collection(db,"ris"));
-
-ris = [];
-
-snapshot.forEach(docSnap=>{
-
-   ris.push({
-
-    docId: docSnap.id,
-
-    ...docSnap.data()
-
-});
-
-});
 
 
+
+
+const pendingCount = ris.filter(r => r.status === "PENDING").length;
+
+const badge = document.getElementById("pendingRequestBadge");
+
+if (badge) {
+    if (pendingCount > 0) {
+        badge.style.display = "inline-block";
+        badge.textContent = pendingCount;
+    } else {
+        badge.style.display = "none";
+    }
+}
 
 const currentUser =
 JSON.parse(localStorage.getItem("currentUser"));
@@ -3635,11 +4889,34 @@ htmlRIS += `
 <td>${r.division}</td>
 
 <td>
+
+
 ${
     r.status=="APPROVED"
-    ? '<span style="background:#198754;color:#fff;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;">APPROVED</span>'
-    : '<span style="background:#ffc107;color:#000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;">PENDING</span>'
+
+    ? '<span style="background:#198754;color:#fff;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;">🟢 APPROVED</span>'
+
+    : r.status=="PARTIALLY APPROVED"
+
+    ? '<span style="background:#0dcaf0;color:#000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;">🟡 PARTIALLY APPROVED</span>'
+
+    : r.status=="REJECTED"
+
+    ? '<span style="background:#dc3545;color:#fff;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;">🔴 REJECTED</span>'
+
+    : '<span style="background:#ffc107;color:#000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;">🟠 PENDING</span>'
 }
+
+
+
+
+
+
+
+
+
+
+
 </td>
 
 <td>
@@ -3744,6 +5021,49 @@ loadApprovedRIS();
 
 
 
+
+
+
+
+
+
+
+
+
+
+    const pendingCount = ris.filter(
+        r => r.status === "PENDING"
+    ).length;
+
+    const badge = document.getElementById(
+        "pendingRequestBadge"
+    );
+
+    if (badge) {
+
+        if (pendingCount > 0) {
+
+            badge.style.display = "inline-block";
+
+            badge.textContent = pendingCount;
+
+        } else {
+
+            badge.style.display = "none";
+
+        }
+
+    }
+
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
+
+    const isAdmin =
+        (currentUser.role || "").toUpperCase() === "ADMIN";
+
+   
+
+
 async function approveRIS(index){
 
 const currentUser =
@@ -3799,23 +5119,17 @@ for (const x of r.items){
     );
 
     await addDoc(collection(db,"stockCard"),{
-
-    date:new Date().toLocaleDateString(),
-
+    date: r.issueDate || r.risDate || r.date || "",
+    issueDate: r.issueDate || r.risDate || r.date || "",
     code:items[x.item].code,
-
     description:items[x.item].description,
-
     unit:items[x.item].unit,
-
     type:"STOCK OUT",
-
+    office:r.division || "",
+    reference:r.id || "",
     qtyIn:0,
-
-    qtyOut:x.qty,
-
+    qtyOut:Number(x.qty),
     balance:items[x.item].balance
-
 });
 
 }
@@ -3883,7 +5197,10 @@ function loadApprovedRIS(){
             return;
         }
 
-        if(r.status=="APPROVED"){
+        if(
+    r.status=="APPROVED" ||
+    r.status=="PARTIALLY APPROVED"
+){
 
             let totalQty = 0;
 
@@ -3902,9 +5219,18 @@ function loadApprovedRIS(){
 
                 <td>${totalQty}</td>
 
-                <td style="color:green;font-weight:bold;">
-                    APPROVED
-                </td>
+                <td>
+
+${
+r.status=="APPROVED"
+
+? "<span style='color:green;font-weight:bold;'>🟢 APPROVED</span>"
+
+: "<span style='color:#0dcaf0;font-weight:bold;'>🟡 PARTIALLY APPROVED</span>"
+
+}
+
+</td>
 
                 <td>
 
@@ -3944,24 +5270,56 @@ function viewRIS(index){
     document.getElementById("viewRISNo").innerHTML = r.id;
     document.getElementById("viewRequestor").innerHTML = r.requestor;
     document.getElementById("viewDivision").innerHTML = r.division;
+
+document.getElementById("viewPosition").innerHTML =
+r.position || "-";
+
     document.getElementById("approvePurpose").innerHTML = r.purpose;
     document.getElementById("viewDate").innerHTML = r.date;
 
     let html="";
 
-    r.items.forEach(x=>{
 
-        let item = items[x.item];
+r.items.forEach(x=>{
 
-        html += `
-        <tr>
-            <td>${item.code}</td>
-            <td>${item.description}</td>
-            <td>${x.qty}</td>
-        </tr>
-        `;
+    let item = items[x.item];
 
-    });
+    let status = "";
+
+    if(x.status=="APPROVED"){
+
+        status = "<span style='color:green;font-weight:bold;'>🟢 APPROVED</span>";
+
+    }else if(x.status=="NOT APPROVED"){
+
+        status = "<span style='color:red;font-weight:bold;'>🔴 NOT APPROVED</span>";
+
+    }else{
+
+        status = "<span style='color:orange;font-weight:bold;'>🟡 PENDING</span>";
+
+    }
+
+    html += `
+    <tr>
+        <td>${item.code}</td>
+        <td>${item.description}</td>
+        <td>${x.qty}</td>
+        <td>${status}</td>
+    </tr>
+    `;
+
+});
+
+
+
+
+
+
+
+
+
+
 
     document.getElementById("tblViewRISItems").innerHTML = html;
 
@@ -4114,42 +5472,17 @@ function loadRISItems(){
 
 let html="";
 
-risItems.forEach((r,index)=>{
-
-let item=items[r.item];
-
-html+=`
-
-<tr>
-
-<td>
-
-${item.code} - ${item.description}
-
-</td>
-
-<td>
-
-${r.qty}
-
-</td>
-
-<td>
-
-<button
-style="background:red;"
-onclick="removeRISItem(${index})">
-
-Remove
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
+risItems.forEach(function(item, i){
+    html += `
+    <tr>
+        <td>${items[item.item].description}</td>
+        <td>${item.qty}</td>
+        <td>${item.unit || ""}</td>
+        <td>
+            <button onclick="removeRISItem(${i})">Remove</button>
+        </td>
+    </tr>
+    `;
 });
 
 tblRISItems.innerHTML=html;
@@ -4170,54 +5503,53 @@ function closeViewRIS(){
     document.getElementById("viewRISModal").style.display = "none";
 }
 
-
-
-
-
 function printRIS(){
 
     if(!currentRIS) return;
 
-    let rows="";
+    
 
-    currentRIS.items.forEach(x=>{
 
-        let item = items[x.item];
 
-        rows += `
 
-       
-<tr>
+let rows = "";
 
-<td>
+currentRIS.items.forEach(x=>{
 
-${item.code}
+    let item = items[x.item];
 
+    const notApproved = x.status === "NOT APPROVED";
+
+    const rowStyle = notApproved
+    ? "color:red;"
+    : "";
+
+    const remarks = notApproved
+        ? "NOT APPROVED"
+        : "";
+
+    rows += `
+    <tr style="${rowStyle}">
+        <td style="text-align:center;${notApproved ? "text-decoration:line-through;" : ""}">
+    ${item.code}
 </td>
 
-<td>
-
-${item.unit}
-
+<td style="text-align:center;${notApproved ? "text-decoration:line-through;" : ""}">
+    ${item.unit}
 </td>
 
-<td>
-
-${item.description}
-
+<td style="${notApproved ? "text-decoration:line-through;" : ""}">
+    ${item.description}
 </td>
 
-<td>
-
-${x.qty}
-
+<td style="text-align:center;${notApproved ? "text-decoration:line-through;" : ""}">
+    ${x.qty}
+</td>
+        
+<td style="text-align:center;font-weight:bold;color:red;">
+    ${remarks}
 </td>
 
-<td>
-
-</td>
-
-</tr>
 
 
 
@@ -4225,255 +5557,265 @@ ${x.qty}
 
 
 
-        `;
 
-    });
 
-    let win = window.open("","","width=900,height=700");
+    </tr>
+    `;
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    let win = window.open("","","width=1000,height=900");
 
     win.document.write(`
+<html>
+<head>
 
-    <html>
+<title>RIS</title>
 
-    <head>
+<style>
 
-    <title>RIS</title>
+@page{
+    size:Letter portrait;
+    margin:.5in;
+}
 
-    <style>
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:12px;
+    color:#000;
+    margin:0;
+}
 
-    body{
+.header{
+    text-align:center;
+    line-height:1.3;
+}
 
-        font-family:Arial;
+.header h2{
+    margin:8px 0;
+    font-size:18px;
+}
 
-        padding:30px;
+.header h3{
+    margin:3px 0;
+    font-size:14px;
+}
 
-    }
+.info{
+    width:100%;
+    margin-top:20px;
+    border-collapse:collapse;
+}
 
-    table{
+.info td{
+    border:none;
+    padding:3px;
+    font-size:12px;
+}
 
-        width:100%;
+.risTable{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
 
-        border-collapse:collapse;
+.risTable th,
+.risTable td{
+    border:1px solid #000;
+    padding:6px;
+    font-size:12px;
+}
 
-    }
+.risTable th{
+    text-align:center;
+}
 
-    th,td{
+.signTable{
+    width:100%;
+    margin-top:70px;
+    border-collapse:collapse;
+}
 
-        border:1px solid #000;
+.signTable td{
+    border:none;
+    text-align:center;
+    vertical-align:top;
+    width:25%;
+}
 
-        padding:8px;
+.line{
+    margin-top:35px;
+    border-top:1px solid #000;
+}
 
-    }
+</style>
 
-    h2{
+</head>
 
-        text-align:center;
+<body>
 
-    }
+<div class="header">
 
-    </style>
+<div>Republic of the Philippines</div>
 
-    </head>
+<h3>DEPARTMENT OF SCIENCE AND TECHNOLOGY</h3>
 
-    <body>
+<div>REGIONAL OFFICE NO. II</div>
 
-  
-<div style="text-align:center;line-height:1.4;">
+<div>Carig Sur, Tuguegarao City</div>
 
-<h4 style="margin:0;">
-Republic of the Philippines
-</h4>
-
-<h3 style="margin:5px 0;">
-DEPARTMENT OF SCIENCE AND TECHNOLOGY
-</h3>
-
-<h4 style="margin:0;">
-CARIG SUR, TUGUEGARAO CITY
-</h4>
-
-<h2 style="margin-top:20px;">
-REQUISITION AND ISSUE SLIP
-</h2>
+<h2>REQUISITION AND ISSUE SLIP</h2>
 
 </div>
 
-
-
-<table
-style="width:100%;margin-top:20px;border:none;">
+<table class="info">
 
 <tr>
 
-<td style="border:none;">
-
+<td width="60%">
 <b>Division :</b>
-
 ${currentRIS.division}
-
 </td>
 
-<td style="border:none;text-align:right;">
-
+<td align="right">
 <b>RIS No :</b>
-
 ${currentRIS.id}
-
 </td>
 
 </tr>
 
 <tr>
 
-<td style="border:none;">
-
+<td>
 <b>Requestor :</b>
-
 ${currentRIS.requestor}
-
 </td>
 
-<td style="border:none;text-align:right;">
-
+<td align="right">
 <b>Date :</b>
-
 ${new Date().toLocaleDateString()}
-
 </td>
 
 </tr>
 
 <tr>
 
-<td colspan="2"
-style="border:none;">
-
+<td colspan="2">
 <b>Purpose :</b>
-
 ${currentRIS.purpose}
-
 </td>
 
 </tr>
 
 </table>
 
+<table class="risTable">
 
-<table>
+<thead>
 
 <tr>
 
-<th style="width:120px;">
+<th width="120">Stock No.</th>
 
-Stock No.
+<th width="80">Unit</th>
 
-</th>
+<th>Item Description</th>
 
-<th style="width:100px;">
+<th width="80">Quantity</th>
 
-Unit
-
-</th>
-
-<th>
-
-Item Description
-
-</th>
-
-<th style="width:80px;">
-
-Quantity
-
-</th>
-
-<th style="width:120px;">
-
-Remarks
-
-</th>
+<th width="120">Remarks</th>
 
 </tr>
+
+</thead>
+
+<tbody>
 
 ${rows}
 
+</tbody>
+
+
+
+
 </table>
 
-
-
-<br><br>
-
-<table
-style="width:100%;border:none;margin-top:40px;">
+<table class="signTable">
 
 <tr>
 
-<td
-style="border:none;text-align:center;">
+<td>
 
-Requested by:
+Requested by
 
-<br><br><br>
+<div class="line"></div>
 
-________________________
+<b>${currentRIS.requestor}</b>
 
 <br>
 
-${currentRIS.requestor}
+${currentRIS.position || ""}
 
 </td>
 
-<td
-style="border:none;text-align:center;">
+<td>
 
-Approved by:
+Approved by
 
-<br><br><br>
+<div class="line"></div>
 
-________________________
+_____________________________
 
-</td>
+<br>
 
-<td
-style="border:none;text-align:center;">
-
-Issued by:
-
-<br><br><br>
-
-________________________
+Chief, Administrative Services
 
 </td>
 
-<td
-style="border:none;text-align:center;">
+<td>
 
-Received by:
+Issued by
 
-<br><br><br>
+<div class="line"></div>
 
-________________________
+_____________________________
+
+<br>
+
+Supply Officer
+
+</td>
+
+<td>
+
+Received by
+
+<div class="line"></div>
+
+_____________________________
+
+<br>
+
+Signature over Printed Name
 
 </td>
 
 </tr>
 
 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </body>
 
@@ -4481,26 +5823,31 @@ ________________________
 
 `);
 
-
-
-
-
-
-
-
-
-
-
-   
-
-
-   
-
     win.document.close();
 
-    win.print();
+    setTimeout(()=>{
+
+        win.focus();
+
+        win.print();
+
+    },500);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4523,22 +5870,51 @@ async function approveSelectedItems(){
 
     for(let i=0;i<checks.length;i++){
 
-        if(checks[i].checked){
+     let x = r.items[i];
 
-            let x = r.items[i];
+// Kung wala pang status field
+if(!x.status){
+    x.status = "PENDING";
+}
 
-            items[x.item].balance -= x.qty;
+if(checks[i].checked){
 
-            await updateDoc(
-                doc(db,"items",items[x.item].id),
-                {
-                    balance:items[x.item].balance
-                }
-            );
+    x.status = "APPROVED";
 
-            approved++;
+    items[x.item].balance -= x.qty;
 
-        }
+await updateDoc(
+    doc(db,"items",items[x.item].id),
+    {
+        balance:items[x.item].balance
+    }
+);
+
+// ===== SAVE STOCK CARD (ISSUE) =====
+
+await addDoc(collection(db,"stockCard"),{
+    code: items[x.item].code,
+    description: items[x.item].description,
+    unit: items[x.item].unit,
+    type: "STOCK OUT",
+    date: r.issueDate || r.risDate || r.date || "",
+    issueDate: r.issueDate || r.risDate || r.date || "",
+    office: r.division,
+    reference: r.id || "",
+    qtyIn: 0,
+    qtyOut: Number(x.qty),
+    balance: items[x.item].balance
+});
+
+// ===============================
+
+approved++;
+
+}else{
+
+    x.status = "NOT APPROVED";
+
+}
 
     }
 
@@ -4550,12 +5926,31 @@ async function approveSelectedItems(){
 
     }
 
-    await updateDoc(
-        doc(db,"ris",r.docId),
-        {
-            status:"APPROVED"
-        }
-    );
+    let overallStatus = "";
+
+if(approved == r.items.length){
+
+    overallStatus = "APPROVED";
+
+}else if(approved == 0){
+
+    overallStatus = "REJECTED";
+
+}else{
+
+    overallStatus = "PARTIALLY APPROVED";
+
+}
+
+await updateDoc(
+    doc(db,"ris",r.docId),
+    {
+        status: overallStatus,
+        items: r.items
+    }
+);
+
+
 
     closeApproveModal();
 
@@ -4683,8 +6078,13 @@ async function saveUser(){
     const position =
     document.getElementById("userPosition").value.trim();
 
-    const division =
-    document.getElementById("userDivision").value.trim();
+    const selectedDivision =
+document.getElementById("userDivision").value;
+
+const division =
+selectedDivision === "OTHERS"
+? document.getElementById("otherDivision").value.trim()
+: selectedDivision;
 
     const username =
     document.getElementById("userUsername").value
@@ -4746,11 +6146,21 @@ async function saveUser(){
 
     });
 
-    alert("User added successfully.");
+   alert("User added successfully.");
 
-    closeUserModal();
+// Clear Form
+document.getElementById("userFullName").value = "";
+document.getElementById("userPosition").value = "";
+document.getElementById("userDivision").selectedIndex = 0;
+document.getElementById("otherDivision").value = "";
+document.getElementById("otherDivision").style.display = "none";
+document.getElementById("userUsername").value = "";
+document.getElementById("userPassword").value = "";
+document.getElementById("userRole").selectedIndex = 0;
 
-    await loadUsers();
+closeUserModal();
+
+await loadUsers();
 
 }
 
@@ -4922,6 +6332,430 @@ document.getElementById("mainSystem").style.display="none";
 
 
 
+
+/* ============================================================
+   RSMI GLOBAL MODAL BRIDGE
+   Inline HTML buttons call these through window.*.
+   ============================================================ */
+
+window.openRSMIModal = function(printAfterOpen = false){
+
+    const modal = document.getElementById("rsmiModal");
+    const body  = document.getElementById("rsmiModalBody");
+
+    if(!modal || !body){
+        alert("RSMI modal is not available.");
+        return;
+    }
+
+    // Generate the selected month's RSMI using the existing report generator.
+    try{
+        if(typeof generateRSMIReport === "function"){
+            generateRSMIReport();
+        }
+    }catch(err){
+        console.error("RSMI generation error:", err);
+    }
+
+    const source = document.getElementById("rsmiReportContainer");
+
+    if(source && source.innerHTML.trim()){
+        body.innerHTML = `
+            <div id="rsmiPrintArea"
+                 style="background:white;margin:auto;padding:18px;
+                        max-width:1100px;box-shadow:0 2px 12px rgba(0,0,0,.15);">
+                ${source.innerHTML}
+            </div>`;
+    }else{
+        body.innerHTML = `
+            <div style="background:white;padding:50px;text-align:center;
+                        border-radius:8px;">
+                <b>No RSMI report generated.</b><br>
+                Select a month first, then generate the report.
+            </div>`;
+    }
+
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+
+    if(printAfterOpen){
+        setTimeout(()=>window.printRSMIPreview(),350);
+    }
+};
+
+window.closeRSMIModal = function(){
+    const modal = document.getElementById("rsmiModal");
+    if(modal) modal.style.display = "none";
+    document.body.style.overflow = "";
+};
+
+window.printRSMIPreview = function(){
+
+    const area = document.getElementById("rsmiPrintArea");
+
+    if(!area){
+        alert("There is no RSMI preview to print.");
+        return;
+    }
+
+    const month =
+        document.getElementById("rsmiMonth")?.value || "";
+
+    const report = area.querySelector(".rsmi-report");
+
+    if(!report){
+        alert("RSMI report content is not available.");
+        return;
+    }
+
+    const mainTable = report.querySelector(".rsmi-table");
+
+    if(!mainTable){
+        alert("RSMI table is not available.");
+        return;
+    }
+
+    /*
+     * IMPORTANT:
+     * Chrome does not reliably support CSS position:running().
+     * To guarantee repetition on every printed page, the RSMI is
+     * rebuilt as ONE print table:
+     *
+     *   THEAD = RSMI header + column headings
+     *   TBODY = all RSMI item rows
+     *   TFOOT = recapitulation + certification/signature
+     *
+     * Chrome's table-header-group/table-footer-group repeats these
+     * sections on EVERY physical A4 page.
+     */
+
+    const headerParts = [
+        report.querySelector(".rsmi-header"),
+        report.querySelector(".rsmi-meta"),
+        report.querySelector(".rsmi-fillup")
+    ].filter(Boolean);
+
+    const headerHtml = headerParts
+        .map(el => el.outerHTML)
+        .join("");
+
+    const columnHeaderHtml =
+`
+<tr>
+    <th>RIS No.</th>
+    <th>Responsibility<br>Center Code</th>
+    <th>Stock No.</th>
+    <th>Item</th>
+    <th>Unit</th>
+    <th>Quantity<br>Issued</th>
+    <th>Unit Cost</th>
+    <th>Amount</th>
+</tr>
+`;
+
+   let bodyRowsHtml =
+    mainTable.querySelector("tbody")?.innerHTML || "";
+
+bodyRowsHtml = bodyRowsHtml.replace(
+    /<td([^>]*)rowspan="(\d+)"([^>]*)>([\s\S]*?)<\/td>/gi,
+    (match, before, rowspan, after, content) => {
+        return `<td${before}${after} style="border:1px solid #000 !important;">${content}</td>`;
+    }
+);
+
+
+
+
+
+
+
+
+
+
+
+console.log(bodyRowsHtml);
+    const footerParts = [];
+
+    Array.from(report.children).forEach(el => {
+        if(
+            el === mainTable ||
+            headerParts.includes(el) ||
+            el.classList.contains("rsmi-header")
+        ){
+            return;
+        }
+
+        if(el.tagName === "TABLE"){
+            footerParts.push(el.outerHTML);
+        }
+    });
+
+    const footerHtml = footerParts.join("");
+
+   
+const printWindow = window.open("", "_blank");
+
+if(!printWindow){
+    alert("Please allow pop-ups for printing the RSMI.");
+    return;
+}
+
+const styles = Array.from(document.querySelectorAll("style"))
+    .map(s => s.outerHTML)
+    .join("");
+
+printWindow.document.open();
+
+printWindow.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>RSMI</title>
+
+${styles}
+
+<style>
+
+@page{
+    size:A4 landscape;
+    margin:8mm;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    background:#fff;
+}
+
+body{
+    padding:8mm;
+}
+
+.rsmi-report{
+    width:100% !important;
+    margin:0 auto !important;
+    box-shadow:none !important;
+    border:none !important;
+}
+
+</style>
+
+</head>
+
+<body>
+
+${document.getElementById("rsmiPrintArea").innerHTML}
+
+</body>
+
+</html>
+`);
+
+printWindow.document.close();
+
+setTimeout(()=>{
+    printWindow.focus();
+    printWindow.print();
+},500);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ };
+
+document.getElementById("userDivision").addEventListener("change", function(){
+
+    if(this.value === "OTHERS"){
+
+        document.getElementById("otherDivision").style.display = "block";
+
+    }else{
+
+        document.getElementById("otherDivision").style.display = "none";
+        document.getElementById("otherDivision").value = "";
+
+    }
+
+});
+
+
+window.openEmployeeModal = function () {
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    document.getElementById("empFullname").value =
+        currentUser.fullname || "";
+
+    document.getElementById("empPosition").value =
+        currentUser.position || "";
+
+    document.getElementById("empDivision").value =
+        currentUser.division || "";
+
+    employeeSignature = currentUser.signature || "";
+
+    const preview = document.getElementById("empPreview");
+
+    if (employeeSignature) {
+        preview.src = employeeSignature;
+        preview.style.display = "block";
+    } else {
+        preview.style.display = "none";
+    }
+
+    document.getElementById("employeeModal").style.display = "block";
+}
+window.closeEmployeeModal = function () {
+
+    document.getElementById("employeeModal").style.display = "none";
+}
+
+document.getElementById("empSignature").addEventListener("change", function (e) {
+
+
+
+
+
+window.saveEmployeeDetails = async function () {
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    await updateDoc(
+        doc(db, "users", currentUser.docId),
+        {
+            position: document.getElementById("empPosition").value,
+            division: document.getElementById("empDivision").value,
+            signature: employeeSignature
+        }
+    );
+
+    currentUser.position = document.getElementById("empPosition").value;
+    currentUser.division = document.getElementById("empDivision").value;
+    currentUser.signature = employeeSignature;
+
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+    closeEmployeeModal();
+
+    loadEmployeeDetails();
+
+    alert("Employee details updated successfully!");
+
+}
+
+
+
+
+
+const file = e.target.files[0];
+
+if (!file) return;
+
+// =========================
+// VALIDATE FILE TYPE
+// =========================
+if (file.type !== "image/png") {
+
+    alert(
+        "❌ Invalid File Format!\n\n" +
+        "Only PNG signature is allowed."
+    );
+
+    e.target.value = "";
+
+    return;
+}
+
+// =========================
+// VALIDATE FILE SIZE
+// =========================
+const maxSize = 50 * 1024; // 50 KB
+
+if (file.size > maxSize) {
+
+    alert(
+        "❌ Signature Too Large!\n\n" +
+        "Maximum allowed size is 50 KB.\n\n" +
+        "Please crop or compress your signature before uploading."
+    );
+
+    e.target.value = "";
+
+    return;
+}
+
+
+
+
+
+
+   
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+
+        employeeSignature = event.target.result;
+
+        const preview = document.getElementById("empPreview");
+
+        preview.src = employeeSignature;
+
+        preview.style.display = "block";
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+
+
+function loadEmployeeDetails() {
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    const table = document.getElementById("tblEmployeeDetails");
+
+    table.innerHTML = `
+        <tr>
+            <td>${currentUser.fullname || ""}</td>
+            <td>${currentUser.position || ""}</td>
+            <td>${currentUser.division || ""}</td>
+            <td>
+                ${
+                    currentUser.signature
+                    ? `<img src="${currentUser.signature}" style="height:60px;">`
+                    : "No Signature"
+                }
+            </td>
+        </tr>
+    `;
+
+}
+
+
+
+
+
+
+
+
+
 </script>
 
 
@@ -4942,64 +6776,96 @@ document.getElementById("mainSystem").style.display="none";
 
         <hr>
 
-       <div class="approveHeader">
+  
+<div class="ris-details">
 
-<div>
-<b>RIS No</b><br>
-<span id="viewRISNo"></span>
-</div>
+<table class="ris-info-table">
 
-<div>
-<b>Requestor</b><br>
-<span id="viewRequestor"></span>
-</div>
+<tr>
 
-<div>
-<b>Division</b><br>
-<span id="viewDivision"></span>
-</div>
+<td width="18%"><b>RIS No.</b></td>
+<td width="32%"><span id="viewRISNo"></span></td>
 
-<div>
-<b>Date</b><br>
-<span id="viewDate"></span>
-</div>
+<td width="18%"><b>Date</b></td>
+<td width="32%"><span id="viewDate"></span></td>
 
-</div>
+</tr>
+
+<tr>
+
+<td><b>Requestor</b></td>
+<td><span id="viewRequestor"></span></td>
+
+<td><b>Division</b></td>
+<td><span id="viewDivision"></span></td>
+
+</tr>
+
+<tr>
+
+<td><b>Position</b></td>
+<td><span id="viewPosition"></span></td>
+
+<td></td>
+<td></td>
+
+</tr>
+
+</table>
 
 <div class="purposeBox">
 
-<b>Purpose</b><br>
+<b>Purpose</b>
+
+<hr style="margin:8px 0;">
 
 <span id="approvePurpose"></span>
 
 </div>
 
+</div>
 
 
-        <table>
 
-            <thead>
 
-                <tr>
 
-                    <th>Code</th>
 
-                    <th>Description</th>
 
-                    <th>Qty</th>
 
-                </tr>
 
-            </thead>
+     
+<table>
 
-            <tbody id="tblViewRISItems">
+<thead>
 
-            </tbody>
+<tr>
 
-        
+<th>Code</th>
 
+<th>Description</th>
+
+<th>Qty</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tblViewRISItems">
+
+</tbody>
 
 </table>
+
+
+
+
+
+
+
+
+
 
 <br>
 
@@ -5171,7 +7037,58 @@ Cancel
 
 
 
+<div class="modal" id="employeeModal">
+    <div class="modal-content">
 
+        <h2>Employee Details</h2>
+
+        <label>Full Name</label>
+        <input type="text" id="empFullname" readonly>
+
+        <label>Position</label>
+        <input type="text" id="empPosition">
+
+        <label>Division</label>
+        <input type="text" id="empDivision">
+
+        <label>Signature</label>
+       <input
+type="file"
+id="empSignature"
+accept=".png,image/png">
+
+<div
+style="
+color:#666;
+font-size:12px;
+margin-top:5px;
+">
+
+✅ PNG only<br>
+✅ Maximum file size: 50 KB<br>
+✅ Recommended size: 400 × 200 pixels
+
+</div>
+        <br><br>
+
+        <img
+            id="empPreview"
+            style="max-width:150px;display:none;">
+
+        <br><br>
+
+        <button onclick="saveEmployeeDetails()">
+            Save
+        </button>
+
+        <button
+            onclick="closeEmployeeModal()"
+            style="background:red;">
+            Close
+        </button>
+
+    </div>
+</div>
 
 
 

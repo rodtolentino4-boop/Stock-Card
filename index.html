@@ -1113,7 +1113,50 @@ background:#fafafa;
 }
 
 
+/* ===== FINAL RSMI PRINT ADJUSTMENTS ===== */
 
+.rsmi-print-table{
+    font-size:7px !important;
+}
+
+.rsmi-print-table th,
+.rsmi-print-table td{
+    padding:1px 2px !important;
+    line-height:1.05 !important;
+}
+
+/* COLUMN WIDTHS */
+.rsmi-print-table th:nth-child(1){
+    width:7% !important;
+}
+
+.rsmi-print-table th:nth-child(2){
+    width:14% !important;
+}
+
+.rsmi-print-table th:nth-child(3){
+    width:11% !important;
+}
+
+.rsmi-print-table th:nth-child(4){
+    width:29% !important;
+}
+
+.rsmi-print-table th:nth-child(5){
+    width:6% !important;
+}
+
+.rsmi-print-table th:nth-child(6){
+    width:9% !important;
+}
+
+.rsmi-print-table th:nth-child(7){
+    width:10% !important;
+}
+
+.rsmi-print-table th:nth-child(8){
+    width:14% !important;
+}
 
 
 
@@ -1991,24 +2034,28 @@ style="display:none;">
 <table>
 
 <thead>
-
 <tr>
-
 <th>RIS No.</th>
-
-<th>Item Code</th>
-
-<th>Description</th>
-
-<th>Quantity</th>
-
+<th>Requestor's Name</th>
+<th>Date</th>
 <th>Status</th>
-
 <th>Action</th>
-
 </tr>
-
 </thead>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <tbody id="tblApprovedRIS">
 
@@ -3785,7 +3832,35 @@ let reportRows = [];
 
 
     let html=`<style>
-.rsmi-report{width:100%;min-width:0;color:#000;font-family:Arial,Helvetica,sans-serif}.rsmi-header{text-align:center;line-height:1.25;margin-bottom:8px}.rsmi-header h3{margin:2px 0;font-size:13px}.rsmi-meta,.rsmi-fillup,.rsmi-signatures{width:100%;border-collapse:collapse;font-size:9px}.rsmi-meta td,.rsmi-fillup td,.rsmi-signatures td{border:1px solid #000;padding:3px 5px}.rsmi-fillup td{text-align:center;font-style:italic}.rsmi-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:8px}.rsmi-table th,.rsmi-table td{border:1px solid #000;padding:2px 3px;vertical-align:top}.rsmi-table th{background:white!important;text-align:center;vertical-align:middle;font-weight:bold}.rsmi-table th:nth-child(1){width:7%}.rsmi-table th:nth-child(2){width:14%}.rsmi-table th:nth-child(3){width:12%}.rsmi-table th:nth-child(4){width:25%}.rsmi-table th:nth-child(5){width:7%}.rsmi-table th:nth-child(6){width:9%}.rsmi-table th:nth-child(7){width:11%}.rsmi-table th:nth-child(8){width:15%}.rsmi-center{text-align:center;vertical-align:middle!important;font-weight:bold}.rsmi-qty,.rsmi-money{text-align:right}.rsmi-subtotal td,.rsmi-grand td{font-weight:bold;background:white!important}.rsmi-signatures td{height:105px;vertical-align:top}.rsmi-empty{padding:45px!important;text-align:center;color:#777}@media print{tr{page-break-inside:avoid}}</style>
+.rsmi-report{width:100%;min-width:0;color:#000;font-family:Arial,Helvetica,sans-serif}.rsmi-header{text-align:center;line-height:1.25;margin-bottom:8px}.rsmi-header h3{margin:2px 0;font-size:13px}.rsmi-meta,.rsmi-fillup,.rsmi-signatures{width:100%;border-collapse:collapse;font-size:9px}.rsmi-meta td,.rsmi-fillup td,.rsmi-signatures td{border:1px solid #000;padding:3px 5px}.rsmi-fillup td{text-align:center;font-style:italic}
+
+.rsmi-table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-size:7px;
+}
+
+.rsmi-table th,
+.rsmi-table td{
+    border:1px solid #000;
+    padding:1px 2px;
+    vertical-align:top;
+    line-height:1.05;
+}
+
+.rsmi-table th{background:white!important;text-align:center;vertical-align:middle;font-weight:bold}
+
+.rsmi-table th:nth-child(1){width:7%}
+.rsmi-table th:nth-child(2){width:14%}
+.rsmi-table th:nth-child(3){width:11%}
+.rsmi-table th:nth-child(4){width:29%}
+.rsmi-table th:nth-child(5){width:6%}
+.rsmi-table th:nth-child(6){width:9%}
+.rsmi-table th:nth-child(7){width:10%}
+.rsmi-table th:nth-child(8){width:14%}
+
+.rsmi-center{text-align:center;vertical-align:middle!important;font-weight:bold}.rsmi-qty,.rsmi-money{text-align:right}.rsmi-subtotal td,.rsmi-grand td{font-weight:bold;background:white!important}.rsmi-signatures td{height:105px;vertical-align:top}.rsmi-empty{padding:45px!important;text-align:center;color:#777}@media print{tr{page-break-inside:avoid}}</style>
 <div class="rsmi-report"><div class="rsmi-header"><h3>REPORT OF SUPPLIES AND MATERIALS ISSUED</h3></div>
 <table class="rsmi-meta"><tr><td style="width:50%"><b>Entity Name :</b> DOST - RO2</td><td style="width:50%"><b>Serial No.</b> ${rsmiEscape(serialDate)}</td></tr><tr><td><b>Fund Cluster :</b> 101</td><td><b>Date :</b> ${rsmiEscape(monthName)}</td></tr></table>
 <table class="rsmi-fillup"><tr><td style="width:50%">To be filled up by the supply and/or Property Division/Unit</td><td style="width:50%">To be filled up by the Account Division/Unit</td></tr></table>`;
@@ -5180,15 +5255,16 @@ await updateDoc(
 
 }
 
+
 function loadApprovedRIS(){
 
     const currentUser =
-    JSON.parse(localStorage.getItem("currentUser"));
+        JSON.parse(localStorage.getItem("currentUser"));
 
     const isAdmin =
-    (currentUser.role || "").toUpperCase() === "ADMIN";
+        (currentUser.role || "").toUpperCase() === "ADMIN";
 
-    let html="";
+    let html = "";
 
     ris.forEach((r,index)=>{
 
@@ -5198,61 +5274,54 @@ function loadApprovedRIS(){
         }
 
         if(
-    r.status=="APPROVED" ||
-    r.status=="PARTIALLY APPROVED"
-){
-
-            let totalQty = 0;
-
-            r.items.forEach(x=>{
-                totalQty += x.qty;
-            });
+            r.status=="APPROVED" ||
+            r.status=="PARTIALLY APPROVED"
+        ){
 
             html += `
             <tr>
 
-                <td>${r.id}</td>
-
-                <td>${r.items.length} Item(s)</td>
-
-                <td>Multiple Items</td>
-
-                <td>${totalQty}</td>
-
+                <!-- RIS NO. -->
                 <td>
+                    ${r.id}
+                </td>
 
-${
-r.status=="APPROVED"
-
-? "<span style='color:green;font-weight:bold;'>🟢 APPROVED</span>"
-
-: "<span style='color:#0dcaf0;font-weight:bold;'>🟡 PARTIALLY APPROVED</span>"
-
-}
-
-</td>
-
+                <!-- REQUESTOR'S NAME -->
                 <td>
+                    ${r.requestor || "-"}
+                </td>
 
+                <!-- DATE -->
+                <td>
+                    ${r.date || r.risDate || "-"}
+                </td>
+
+                <!-- STATUS -->
+                <td>
+                    ${
+                        r.status=="APPROVED"
+
+                        ? "<span style='color:green;font-weight:bold;'>🟢 APPROVED</span>"
+
+                        : "<span style='color:#0dcaf0;font-weight:bold;'>🟡 PARTIALLY APPROVED</span>"
+                    }
+                </td>
+
+                <!-- ACTION -->
+                <td>
                     <button onclick="viewRIS(${index})">
                         View
                     </button>
-
                 </td>
 
             </tr>
             `;
-
         }
 
     });
 
     tblApprovedRIS.innerHTML = html;
-
 }
-
-
-
 
 
 
@@ -5566,256 +5635,603 @@ currentRIS.items.forEach(x=>{
 
 
 
+let win = window.open("","","width=1000,height=900");
+
+if(!win){
+    alert("Please allow pop-ups for RIS printing.");
+    return;
+}
 
 
+/* ==========================================================
+   DOST RIS PRINT FORMAT
+   ========================================================== */
 
+win.document.write(`
 
+<!DOCTYPE html>
 
-
-
-
-
-
-
-    let win = window.open("","","width=1000,height=900");
-
-    win.document.write(`
 <html>
+
 <head>
 
-<title>RIS</title>
+<meta charset="UTF-8">
+
+<title>REQUISITION AND ISSUE SLIP</title>
+
 
 <style>
 
 @page{
-    size:Letter portrait;
-    margin:.5in;
+    size:A4 portrait;
+    margin:10mm;
 }
+
+
+*{
+    box-sizing:border-box;
+}
+
+
+html,
+body{
+    margin:0;
+    padding:0;
+    background:#fff;
+    color:#000;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+}
+
 
 body{
-    font-family:Arial,Helvetica,sans-serif;
-    font-size:12px;
-    color:#000;
-    margin:0;
+    width:100%;
 }
 
-.header{
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+.ris-header{
     text-align:center;
-    line-height:1.3;
+    line-height:1.2;
 }
 
-.header h2{
-    margin:8px 0;
-    font-size:18px;
+
+.ris-header .republic{
+    font-size:10px;
 }
 
-.header h3{
-    margin:3px 0;
+
+.ris-header .department{
+    font-size:12px;
+    font-weight:bold;
+}
+
+
+.ris-header .office{
+    font-size:10px;
+}
+
+
+.ris-title{
     font-size:14px;
+    font-weight:bold;
+    margin:8px 0 12px 0;
 }
 
-.info{
-    width:100%;
-    margin-top:20px;
-    border-collapse:collapse;
-}
 
-.info td{
-    border:none;
-    padding:3px;
-    font-size:12px;
-}
+/* ==========================================================
+   TOP INFORMATION
+   ========================================================== */
 
-.risTable{
+.ris-info{
     width:100%;
     border-collapse:collapse;
-    margin-top:10px;
+    margin-bottom:6px;
 }
 
-.risTable th,
-.risTable td{
+
+.ris-info td{
     border:1px solid #000;
-    padding:6px;
-    font-size:12px;
+    padding:4px 5px;
+    height:22px;
 }
 
-.risTable th{
-    text-align:center;
+
+.ris-info .label{
+    font-weight:bold;
 }
 
-.signTable{
+
+/* ==========================================================
+   MAIN RIS TABLE
+   ========================================================== */
+
+.ris-table{
     width:100%;
-    margin-top:70px;
     border-collapse:collapse;
+    table-layout:fixed;
 }
 
-.signTable td{
-    border:none;
+
+.ris-table th,
+.ris-table td{
+    border:1px solid #000;
+    padding:4px;
+    vertical-align:middle;
+}
+
+
+.ris-table th{
+    background:#fff !important;
+    background-color:#fff !important;
+    color:#000 !important;
     text-align:center;
-    vertical-align:top;
-    width:25%;
+    font-weight:bold;
 }
 
-.line{
-    margin-top:35px;
-    border-top:1px solid #000;
+
+.ris-table .requisition{
+    text-align:center;
+    font-weight:bold;
+}
+
+
+.ris-table .stock{
+    text-align:center;
+    font-weight:bold;
+}
+
+
+.ris-table .issue{
+    text-align:center;
+    font-weight:bold;
+}
+
+
+/* COLUMN WIDTHS */
+
+.ris-table .stock-no{
+    width:12%;
+}
+
+
+.ris-table .unit{
+    width:8%;
+}
+
+
+.ris-table .description{
+    width:30%;
+}
+
+
+.ris-table .quantity{
+    width:10%;
+}
+
+
+.ris-table .yesno{
+    width:8%;
+}
+
+
+.ris-table .unit-cost{
+    width:12%;
+}
+
+
+.ris-table .remarks{
+    width:20%;
+}
+
+
+.ris-table tbody td{
+    height:28px;
+}
+
+
+/* ==========================================================
+   PURPOSE
+   ========================================================== */
+
+.ris-purpose{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:6px;
+}
+
+
+.ris-purpose td{
+    border:1px solid #000;
+    padding:5px;
+    height:45px;
+    vertical-align:top;
+}
+
+
+.ris-purpose .label{
+    font-weight:bold;
+}
+
+
+/* ==========================================================
+   SIGNATURES
+   ========================================================== */
+
+.ris-signatures{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    table-layout:fixed;
+}
+
+
+.ris-signatures th,
+.ris-signatures td{
+    border:1px solid #000;
+    padding:4px;
+}
+
+
+.ris-signatures th{
+    background:#fff !important;
+    color:#000 !important;
+    text-align:left;
+    font-weight:bold;
+}
+
+
+.ris-signatures td{
+    height:85px;
+    vertical-align:top;
+}
+
+
+.signature-line{
+    margin-top:38px;
+    border-bottom:1px solid #000;
+    height:1px;
+}
+
+
+.signature-name{
+    text-align:center;
+    font-weight:bold;
+    margin-top:4px;
+}
+
+
+.signature-position{
+    text-align:center;
+    font-size:9px;
+}
+
+
+.signature-date{
+    margin-top:8px;
+}
+
+
+@media print{
+
+    html,
+    body{
+        margin:0;
+        padding:0;
+    }
+
+
+    .ris-table th,
+    .ris-signatures th{
+        background:#fff !important;
+        background-color:#fff !important;
+        color:#000 !important;
+    }
+
+
+    tr{
+        page-break-inside:avoid;
+    }
+
 }
 
 </style>
 
 </head>
 
+
 <body>
 
-<div class="header">
 
-<div>Republic of the Philippines</div>
+<!-- ========================================================
+     HEADER
+     ======================================================== -->
 
-<h3>DEPARTMENT OF SCIENCE AND TECHNOLOGY</h3>
+<div class="ris-header">
 
-<div>REGIONAL OFFICE NO. II</div>
+    <div class="republic">
+        Republic of the Philippines
+    </div>
 
-<div>Carig Sur, Tuguegarao City</div>
+    <div class="department">
+        DEPARTMENT OF SCIENCE AND TECHNOLOGY
+    </div>
 
-<h2>REQUISITION AND ISSUE SLIP</h2>
+    <div class="office">
+        REGIONAL OFFICE NO. II
+    </div>
+
+    <div class="office">
+        Carig Sur, Tuguegarao City
+    </div>
+
+    <div class="ris-title">
+        REQUISITION AND ISSUE SLIP
+    </div>
 
 </div>
 
-<table class="info">
 
-<tr>
+<!-- ========================================================
+     TOP INFORMATION
+     ======================================================== -->
 
-<td width="60%">
-<b>Division :</b>
-${currentRIS.division}
-</td>
+<table class="ris-info">
 
-<td align="right">
-<b>RIS No :</b>
-${currentRIS.id}
-</td>
+    <tr>
 
-</tr>
+        <td>
+            <span class="label">Entity Name:</span>
+            DOST RO II
+        </td>
 
-<tr>
+        <td>
+            <span class="label">Fund Cluster:</span>
+            01
+        </td>
 
-<td>
-<b>Requestor :</b>
-${currentRIS.requestor}
-</td>
+        <td>
+            <span class="label">RIS No.:</span>
+            ${currentRIS.id}
+        </td>
 
-<td align="right">
-<b>Date :</b>
-${new Date().toLocaleDateString()}
-</td>
-
-</tr>
-
-<tr>
-
-<td colspan="2">
-<b>Purpose :</b>
-${currentRIS.purpose}
-</td>
-
-</tr>
-
-</table>
-
-<table class="risTable">
-
-<thead>
-
-<tr>
-
-<th width="120">Stock No.</th>
-
-<th width="80">Unit</th>
-
-<th>Item Description</th>
-
-<th width="80">Quantity</th>
-
-<th width="120">Remarks</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-${rows}
-
-</tbody>
+    </tr>
 
 
+    <tr>
 
+        <td>
+            <span class="label">Division:</span>
+            ${currentRIS.division || ""}
+        </td>
+
+        <td colspan="2">
+            <span class="label">Date:</span>
+            ${new Date().toLocaleDateString()}
+        </td>
+
+    </tr>
+
+
+    <tr>
+
+        <td colspan="3">
+            <span class="label">Requestor:</span>
+            ${currentRIS.requestor || ""}
+        </td>
+
+    </tr>
 
 </table>
 
-<table class="signTable">
 
-<tr>
+<!-- ========================================================
+     MAIN TABLE
+     ======================================================== -->
 
-<td>
+<table class="ris-table">
 
-Requested by
+    <thead>
 
-<div class="line"></div>
+        <tr>
 
-<b>${currentRIS.requestor}</b>
+            <th colspan="4" class="requisition">
+                REQUISITION
+            </th>
 
-<br>
+            <th colspan="2" class="stock">
+                STOCK AVAILABLE?
+            </th>
 
-${currentRIS.position || ""}
+            <th colspan="2" class="issue">
+                ISSUE
+            </th>
 
-</td>
+        </tr>
 
-<td>
 
-Approved by
+        <tr>
 
-<div class="line"></div>
+            <th class="stock-no">
+                Stock No.
+            </th>
 
-_____________________________
+            <th class="unit">
+                Unit
+            </th>
 
-<br>
+            <th class="description">
+                Description
+            </th>
 
-Chief, Administrative Services
+            <th class="quantity">
+                Quantity
+            </th>
 
-</td>
+            <th class="yesno">
+                Yes
+            </th>
 
-<td>
+            <th class="yesno">
+                No
+            </th>
 
-Issued by
+            <th class="unit-cost">
+                Unit Cost
+            </th>
 
-<div class="line"></div>
+            <th class="remarks">
+                Remarks
+            </th>
 
-_____________________________
+        </tr>
 
-<br>
+    </thead>
 
-Supply Officer
 
-</td>
+    <tbody>
 
-<td>
+        ${rows}
 
-Received by
-
-<div class="line"></div>
-
-_____________________________
-
-<br>
-
-Signature over Printed Name
-
-</td>
-
-</tr>
+    </tbody>
 
 </table>
+
+
+<!-- ========================================================
+     PURPOSE
+     ======================================================== -->
+
+<table class="ris-purpose">
+
+    <tr>
+
+        <td>
+
+            <span class="label">
+                Purpose:
+            </span>
+
+            ${currentRIS.purpose || "For office use"}
+
+        </td>
+
+    </tr>
+
+</table>
+
+
+<!-- ========================================================
+     SIGNATURES
+     ======================================================== -->
+
+<table class="ris-signatures">
+
+    <tr>
+
+        <th>
+            Requested by:
+        </th>
+
+        <th>
+            Approved by:
+        </th>
+
+        <th>
+            Issued by:
+        </th>
+
+        <th>
+            Received by:
+        </th>
+
+    </tr>
+
+
+    <tr>
+
+        <td>
+
+            <div class="signature-line"></div>
+
+            <div class="signature-name">
+                ${currentRIS.requestor || ""}
+            </div>
+
+            <div class="signature-position">
+                ${currentRIS.position || ""}
+            </div>
+
+            <div class="signature-date">
+                Date: __________________
+            </div>
+
+        </td>
+
+
+        <td>
+
+            <div class="signature-line"></div>
+
+            <div class="signature-name">
+                __________________________
+            </div>
+
+            <div class="signature-position">
+                Chief, Administrative Services
+            </div>
+
+            <div class="signature-date">
+                Date: __________________
+            </div>
+
+        </td>
+
+
+        <td>
+
+            <div class="signature-line"></div>
+
+            <div class="signature-name">
+                __________________________
+            </div>
+
+            <div class="signature-position">
+                Supply Officer
+            </div>
+
+            <div class="signature-date">
+                Date: __________________
+            </div>
+
+        </td>
+
+
+        <td>
+
+            <div class="signature-line"></div>
+
+            <div class="signature-name">
+                __________________________
+            </div>
+
+            <div class="signature-position">
+                Signature over Printed Name
+            </div>
+
+            <div class="signature-date">
+                Date: __________________
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
 
 </body>
 
@@ -5823,20 +6239,30 @@ Signature over Printed Name
 
 `);
 
-    win.document.close();
 
-    setTimeout(()=>{
+win.document.close();
 
-        win.focus();
 
-        win.print();
+setTimeout(()=>{
 
-    },500);
+    win.focus();
+
+    win.print();
+
+},500);
 
 }
 
 
 
+
+
+
+
+
+
+
+ 
 
 
 
@@ -6398,9 +6824,6 @@ window.printRSMIPreview = function(){
         return;
     }
 
-    const month =
-        document.getElementById("rsmiMonth")?.value || "";
-
     const report = area.querySelector(".rsmi-report");
 
     if(!report){
@@ -6415,19 +6838,10 @@ window.printRSMIPreview = function(){
         return;
     }
 
-    /*
-     * IMPORTANT:
-     * Chrome does not reliably support CSS position:running().
-     * To guarantee repetition on every printed page, the RSMI is
-     * rebuilt as ONE print table:
-     *
-     *   THEAD = RSMI header + column headings
-     *   TBODY = all RSMI item rows
-     *   TFOOT = recapitulation + certification/signature
-     *
-     * Chrome's table-header-group/table-footer-group repeats these
-     * sections on EVERY physical A4 page.
-     */
+
+    /* ==========================================================
+       GET RSMI HEADER
+       ========================================================== */
 
     const headerParts = [
         report.querySelector(".rsmi-header"),
@@ -6439,144 +6853,797 @@ window.printRSMIPreview = function(){
         .map(el => el.outerHTML)
         .join("");
 
-    const columnHeaderHtml =
-`
-<tr>
-    <th>RIS No.</th>
-    <th>Responsibility<br>Center Code</th>
-    <th>Stock No.</th>
-    <th>Item</th>
-    <th>Unit</th>
-    <th>Quantity<br>Issued</th>
-    <th>Unit Cost</th>
-    <th>Amount</th>
-</tr>
-`;
 
-   let bodyRowsHtml =
-    mainTable.querySelector("tbody")?.innerHTML || "";
+    /* ==========================================================
+       COLUMN HEADER
+       ========================================================== */
 
-bodyRowsHtml = bodyRowsHtml.replace(
-    /<td([^>]*)rowspan="(\d+)"([^>]*)>([\s\S]*?)<\/td>/gi,
-    (match, before, rowspan, after, content) => {
-        return `<td${before}${after} style="border:1px solid #000 !important;">${content}</td>`;
+    const columnHeaderHtml = `
+        <tr>
+            <th>RIS No.</th>
+            <th>Responsibility<br>Center Code</th>
+            <th>Stock No.</th>
+            <th>Item</th>
+            <th>Unit</th>
+            <th>Quantity<br>Issued</th>
+            <th>Unit Cost</th>
+            <th>Amount</th>
+        </tr>
+    `;
+
+
+    /* ==========================================================
+       GET ALL ITEM ROWS
+       ========================================================== */
+
+    const tempBody = document.createElement("tbody");
+
+    tempBody.innerHTML =
+        mainTable.querySelector("tbody")?.innerHTML || "";
+
+
+    /* ==========================================================
+       REMOVE ORIGINAL SUB-TOTAL
+       ========================================================== */
+
+    tempBody
+        .querySelectorAll(".rsmi-subtotal")
+        .forEach(row => row.remove());
+
+
+    const itemRows =
+        Array.from(tempBody.querySelectorAll("tr"));
+
+/* ==========================================================
+   COMPUTE GRAND TOTAL OF ALL PAGES
+   ========================================================== */
+
+let overallGrandTotal = 0;
+
+itemRows.forEach(row => {
+
+    const cells = row.querySelectorAll("td");
+
+    if(cells.length >= 8){
+
+        const amountText =
+            cells[7].textContent
+                .replace(/,/g,"")
+                .replace(/[₱$]/g,"")
+                .trim();
+
+        const amount =
+            parseFloat(amountText) || 0;
+
+        overallGrandTotal += amount;
+
     }
-);
+
+});
 
 
 
 
 
+    /* ==========================================================
+       PAGE SETTINGS
+       EXISTING SYSTEM = 14 ITEMS PER PAGE
+       ========================================================== */
+
+    const ROWS_PER_PAGE = 14;
 
 
+    /* ==========================================================
+       SPLIT ITEMS INTO PAGES
+       ========================================================== */
+
+    const pages = [];
+
+    for(let i = 0; i < itemRows.length; i += ROWS_PER_PAGE){
+
+        pages.push(
+            itemRows.slice(i, i + ROWS_PER_PAGE)
+        );
+
+    }
 
 
+    if(!pages.length){
+        pages.push([]);
+    }
 
 
-console.log(bodyRowsHtml);
+    /* ==========================================================
+       CREATE SUB-TOTAL / GRAND TOTAL ROW
+       ========================================================== */
+function createTotalRow(rows, isLastPage){
+
+    let pageTotal = 0;
+
+    rows.forEach(row => {
+
+        const cells = row.querySelectorAll("td");
+
+        if(cells.length >= 8){
+
+            const amountText =
+                cells[7].textContent
+                    .replace(/,/g,"")
+                    .replace(/[₱$]/g,"")
+                    .trim();
+
+            const amount =
+                parseFloat(amountText) || 0;
+
+            pageTotal += amount;
+
+        }
+
+    });
+
+
+    /* ==========================================================
+       LAST PAGE = GRAND TOTAL OF ALL PAGES
+       ========================================================== */
+
+  const totalToDisplay =
+    isLastPage
+        ? overallGrandTotal
+        : pageTotal;
+
+
+    const label =
+        isLastPage
+            ? "GRAND TOTAL"
+            : "SUB-TOTAL";
+
+
+    return `
+        <tr class="rsmi-page-total">
+
+            <td colspan="7"
+                style="
+                    text-align:right;
+                    font-weight:bold;
+                    border:1px solid #000 !important;
+                    padding:1px 2px !important;
+                ">
+
+                ${label}
+
+            </td>
+
+
+            <td class="rsmi-money"
+                style="
+                    font-weight:bold;
+                    border:1px solid #000 !important;
+                    padding:1px 2px !important;
+                ">
+
+                ${totalToDisplay.toLocaleString("en-US",{
+                    minimumFractionDigits:2,
+                    maximumFractionDigits:2
+                })}
+
+            </td>
+
+        </tr>
+    `;
+}
+    
+
+
+    /* ==========================================================
+       BUILD BODY
+       SUB-TOTAL EVERY PAGE
+       GRAND TOTAL ON LAST PAGE
+       ========================================================== */
+
+    let bodyHtml = "";
+
+    pages.forEach((rows,pageIndex) => {
+
+        const isLastPage =
+            pageIndex === pages.length - 1;
+
+
+        /* ITEM ROWS */
+
+        rows.forEach(row => {
+
+            bodyHtml += row.outerHTML;
+
+        });
+
+
+        /* ======================================================
+           ADD TOTAL ROW
+           ====================================================== */
+
+        bodyHtml += createTotalRow(
+            rows,
+            isLastPage
+        );
+
+
+        /* ======================================================
+           FORCE NEXT PAGE
+           ====================================================== */
+
+        if(!isLastPage){
+
+            bodyHtml += `
+                <tr class="rsmi-page-break">
+                    <td colspan="8"
+                        style="
+                            height:0 !important;
+                            padding:0 !important;
+                            border:0 !important;
+                            line-height:0 !important;
+                            font-size:0 !important;
+                        ">
+                    </td>
+                </tr>
+            `;
+
+        }
+
+    });
+
+
+    /* ==========================================================
+       GET FOOTER
+       EXISTING FOOTER REMAINS UNCHANGED
+       ========================================================== */
+
     const footerParts = [];
 
+
     Array.from(report.children).forEach(el => {
+
         if(
             el === mainTable ||
-            headerParts.includes(el) ||
-            el.classList.contains("rsmi-header")
+            headerParts.includes(el)
         ){
             return;
         }
 
+
         if(el.tagName === "TABLE"){
-            footerParts.push(el.outerHTML);
+
+            footerParts.push(
+                el.outerHTML
+            );
+
         }
+
     });
 
-    const footerHtml = footerParts.join("");
 
-   
-const printWindow = window.open("", "_blank");
+    const footerHtml =
+        footerParts.join("");
 
-if(!printWindow){
-    alert("Please allow pop-ups for printing the RSMI.");
-    return;
-}
 
-const styles = Array.from(document.querySelectorAll("style"))
-    .map(s => s.outerHTML)
-    .join("");
+    /* ==========================================================
+       PRINT WINDOW
+       ========================================================== */
 
-printWindow.document.open();
+    const printWindow =
+        window.open("", "_blank");
 
-printWindow.document.write(`
+
+    if(!printWindow){
+
+        alert(
+            "Please allow pop-ups for printing the RSMI."
+        );
+
+        return;
+
+    }
+
+
+    /* ==========================================================
+       COPY EXISTING STYLES
+       ========================================================== */
+
+    const styles =
+        Array.from(
+            document.querySelectorAll("style")
+        )
+        .map(s => s.outerHTML)
+        .join("");
+
+
+    /* ==========================================================
+       PRINT DOCUMENT
+       ========================================================== */
+
+    printWindow.document.open();
+
+    printWindow.document.write(`
+
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
 <meta charset="UTF-8">
+
 <title>RSMI</title>
 
 ${styles}
 
+
 <style>
 
+/* ==========================================================
+   PAGE
+   ========================================================== */
+
 @page{
-    size:A4 landscape;
+
+    size:A4 portrait;
+
     margin:8mm;
+
 }
 
-html,body{
-    margin:0;
-    padding:0;
-    background:#fff;
-}
 
+/* ==========================================================
+   BODY
+   ========================================================== */
+
+html,
 body{
-    padding:8mm;
+
+    margin:0 !important;
+
+    padding:0 !important;
+
+    background:#fff !important;
+
+    color:#000 !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
 }
 
-.rsmi-report{
+
+*{
+
+    -webkit-print-color-adjust:exact !important;
+
+    print-color-adjust:exact !important;
+
+}
+
+
+/* ==========================================================
+   MAIN PRINT TABLE
+   ========================================================== */
+
+.rsmi-print-table{
+
     width:100% !important;
-    margin:0 auto !important;
-    box-shadow:none !important;
-    border:none !important;
+
+    border-collapse:collapse !important;
+
+    table-layout:fixed !important;
+
+    font-size:7px !important;
+
+}
+
+
+.rsmi-print-table th,
+.rsmi-print-table td{
+
+    border:1px solid #000 !important;
+
+    padding:1px 2px !important;
+
+    vertical-align:top !important;
+
+    line-height:1.05 !important;
+
+}
+
+
+/* ==========================================================
+   COLUMN WIDTHS
+   ========================================================== */
+
+.rsmi-print-table th:nth-child(1){
+    width:7% !important;
+}
+
+.rsmi-print-table th:nth-child(2){
+    width:14% !important;
+}
+
+.rsmi-print-table th:nth-child(3){
+    width:11% !important;
+}
+
+.rsmi-print-table th:nth-child(4){
+    width:29% !important;
+}
+
+.rsmi-print-table th:nth-child(5){
+    width:6% !important;
+}
+
+.rsmi-print-table th:nth-child(6){
+    width:9% !important;
+}
+
+.rsmi-print-table th:nth-child(7){
+    width:10% !important;
+}
+
+.rsmi-print-table th:nth-child(8){
+    width:14% !important;
+}
+
+
+/* ==========================================================
+   REPEAT HEADER
+   ========================================================== */
+
+.rsmi-print-table thead{
+
+    display:table-header-group !important;
+
+}
+
+
+
+/* ==========================================================
+   RSMI COLUMN HEADER - PLAIN WHITE
+   ========================================================== */
+
+.rsmi-print-table thead,
+.rsmi-print-table thead tr,
+.rsmi-print-table thead th{
+
+    background:#ffffff !important;
+
+    background-color:#ffffff !important;
+
+    background-image:none !important;
+
+    color:#000000 !important;
+
+}
+
+
+
+/* ==========================================================
+   BODY ROWS
+   ========================================================== */
+
+.rsmi-print-table tbody tr{
+
+    page-break-inside:avoid !important;
+
+    break-inside:avoid !important;
+
+}
+
+
+.rsmi-print-table tbody td{
+
+    padding:0 !important;
+
+    margin:0 !important;
+
+    height:auto !important;
+
+    line-height:1.7 !important;
+
+    vertical-align:middle !important;
+
+}
+
+
+/* ==========================================================
+   TOTAL ROW
+   ========================================================== */
+
+.rsmi-page-total{
+
+    page-break-inside:avoid !important;
+
+    break-inside:avoid !important;
+
+}
+
+
+.rsmi-page-total td{
+
+    font-weight:bold !important;
+
+    background:#fff !important;
+
+    height:auto !important;
+
+}
+
+
+/* ==========================================================
+   FORCE PAGE BREAK AFTER SUB-TOTAL
+   ========================================================== */
+
+.rsmi-page-break{
+
+    page-break-after:always !important;
+
+    break-after:page !important;
+
+    height:0 !important;
+
+}
+
+
+.rsmi-page-break td{
+
+    border:0 !important;
+
+    padding:0 !important;
+
+    height:0 !important;
+
+    line-height:0 !important;
+
+    font-size:0 !important;
+
+}
+
+
+/* ==========================================================
+   ALIGNMENTS
+   ========================================================== */
+
+.rsmi-center{
+
+    text-align:center;
+
+    vertical-align:middle !important;
+
+    font-weight:bold;
+
+}
+
+
+.rsmi-qty{
+
+    text-align:center;
+
+}
+
+
+.rsmi-money{
+
+    text-align:right;
+
+}
+
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+
+.rsmi-print-table tfoot td{
+
+    border:0 !important;
+
+    padding:0 !important;
+
+}
+
+
+.rsmi-print-table tfoot table{
+
+    width:100% !important;
+
+    border-collapse:collapse !important;
+
+    font-size:9px;
+
+    margin:0;
+
+}
+
+
+.rsmi-print-table tfoot table td{
+
+    border:1px solid #000 !important;
+
+    padding:3px 5px !important;
+
+}
+
+
+/* ==========================================================
+   SIGNATURE
+   ========================================================== */
+
+.rsmi-print-table tfoot .rsmi-signatures td{
+
+    height:105px;
+
+    vertical-align:top;
+
+}
+
+
+/* ==========================================================
+   REPEAT FOOTER
+   ========================================================== */
+
+.rsmi-print-table tfoot{
+
+    display:table-footer-group !important;
+
+}
+
+
+/* ==========================================================
+   PRINT
+   ========================================================== */
+
+@media print{
+
+    html,
+    body{
+
+        margin:0 !important;
+
+        padding:0 !important;
+
+    }
+
+    .rsmi-print-table{
+
+        width:100% !important;
+
+    }
+
+    thead{
+
+        display:table-header-group !important;
+
+    }
+
+    tfoot{
+
+        display:table-footer-group !important;
+
+    }
+
+    tr{
+
+        page-break-inside:avoid !important;
+
+        break-inside:avoid !important;
+
+    }
+
 }
 
 </style>
 
 </head>
 
+
 <body>
 
-${document.getElementById("rsmiPrintArea").innerHTML}
+
+<table class="rsmi-print-table">
+
+
+<colgroup>
+
+    <col style="width:7%;">
+    <col style="width:14%;">
+    <col style="width:11%;">
+    <col style="width:29%;">
+    <col style="width:6%;">
+    <col style="width:9%;">
+    <col style="width:10%;">
+    <col style="width:14%;">
+
+</colgroup>
+
+
+<!-- =====================================================
+     HEADER — REPEATS EVERY PAGE
+     ===================================================== -->
+
+<thead>
+
+    <tr>
+
+        <td colspan="8">
+
+            ${headerHtml}
+
+        </td>
+
+    </tr>
+
+
+    ${columnHeaderHtml}
+
+</thead>
+
+
+<!-- =====================================================
+     ITEMS + SUBTOTAL / GRAND TOTAL
+     ===================================================== -->
+
+<tbody>
+
+    ${bodyHtml}
+
+</tbody>
+
+
+<!-- =====================================================
+     EXISTING FOOTER — UNCHANGED
+     ===================================================== -->
+
+<tfoot>
+
+    <tr>
+
+        <td colspan="8">
+
+            ${footerHtml}
+
+        </td>
+
+    </tr>
+
+</tfoot>
+
+
+</table>
+
 
 </body>
 
 </html>
+
 `);
 
-printWindow.document.close();
 
-setTimeout(()=>{
-    printWindow.focus();
-    printWindow.print();
-},500);
+    printWindow.document.close();
 
 
+    /* ==========================================================
+       PRINT
+       ========================================================== */
 
+    setTimeout(() => {
 
+        printWindow.focus();
 
+        printWindow.print();
 
+    },700);
 
-
-
-
-
-
-
+};
 
 
 
 
-
- };
 
 document.getElementById("userDivision").addEventListener("change", function(){
 

@@ -5572,82 +5572,115 @@ function closeViewRIS(){
     document.getElementById("viewRISModal").style.display = "none";
 }
 
+
 function printRIS(){
 
     if(!currentRIS) return;
 
-    
+
+    /* ==========================================================
+       BUILD DOST RIS ITEM ROWS
+       ========================================================== */
+
+    let rows = "";
 
 
+    currentRIS.items.forEach(x => {
+
+        const item = items[x.item] || {};
+
+        const notApproved =
+            x.status === "NOT APPROVED";
+
+        const approved =
+            x.status === "APPROVED";
 
 
-let rows = "";
+        const stockYes =
+            approved ? "✓" : "";
 
-currentRIS.items.forEach(x=>{
-
-    let item = items[x.item];
-
-    const notApproved = x.status === "NOT APPROVED";
-
-    const rowStyle = notApproved
-    ? "color:red;"
-    : "";
-
-    const remarks = notApproved
-        ? "NOT APPROVED"
-        : "";
-
-    rows += `
-    <tr style="${rowStyle}">
-        <td style="text-align:center;${notApproved ? "text-decoration:line-through;" : ""}">
-    ${item.code}
-</td>
-
-<td style="text-align:center;${notApproved ? "text-decoration:line-through;" : ""}">
-    ${item.unit}
-</td>
-
-<td style="${notApproved ? "text-decoration:line-through;" : ""}">
-    ${item.description}
-</td>
-
-<td style="text-align:center;${notApproved ? "text-decoration:line-through;" : ""}">
-    ${x.qty}
-</td>
-        
-<td style="text-align:center;font-weight:bold;color:red;">
-    ${remarks}
-</td>
+        const stockNo =
+            notApproved ? "✓" : "";
 
 
+        const unitCost =
+            Number(item.price || x.unitCost || 0);
 
 
+        const remarks =
+            notApproved
+                ? "NOT APPROVED"
+                : "";
 
 
+        rows += `
+
+        <tr>
+
+            <td class="center">
+                ${item.code || ""}
+            </td>
+
+            <td class="center">
+                ${item.unit || ""}
+            </td>
+
+            <td>
+                ${item.description || ""}
+            </td>
+
+            <td class="center">
+                ${x.qty || ""}
+            </td>
+
+            <td class="center">
+                ${stockYes}
+            </td>
+
+            <td class="center">
+                ${stockNo}
+            </td>
+
+            <td class="money">
+                ${unitCost
+                    ? unitCost.toLocaleString("en-US",{
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    })
+                    : ""}
+            </td>
+
+            <td>
+                ${remarks}
+            </td>
+
+        </tr>
+
+        `;
+
+    });
 
 
+    /* ==========================================================
+       PRINT WINDOW
+       ========================================================== */
+
+    const win =
+        window.open("","","width=1000,height=900");
 
 
-    </tr>
-    `;
+    if(!win){
 
-});
+        alert(
+            "Please allow pop-ups for RIS printing."
+        );
 
+        return;
 
-
-let win = window.open("","","width=1000,height=900");
-
-if(!win){
-    alert("Please allow pop-ups for RIS printing.");
-    return;
-}
+    }
 
 
-/* ==========================================================
-   DOST RIS PRINT FORMAT
-   ========================================================== */
-
-win.document.write(`
+    win.document.write(`
 
 <!DOCTYPE html>
 
@@ -5662,30 +5695,37 @@ win.document.write(`
 
 <style>
 
+/* ==========================================================
+   PAGE
+   ========================================================== */
+
 @page{
+
     size:A4 portrait;
+
     margin:10mm;
-}
 
-
-*{
-    box-sizing:border-box;
 }
 
 
 html,
 body{
-    margin:0;
-    padding:0;
-    background:#fff;
-    color:#000;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:10px;
-}
 
+    margin:0 !important;
 
-body{
-    width:100%;
+    padding:0 !important;
+
+    background:#fff !important;
+
+    color:#000 !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size:9px;
+
 }
 
 
@@ -5694,142 +5734,187 @@ body{
    ========================================================== */
 
 .ris-header{
+
     text-align:center;
-    line-height:1.2;
+
+    line-height:1.15;
+
 }
 
 
 .ris-header .republic{
-    font-size:10px;
+
+    font-size:9px;
+
 }
 
 
 .ris-header .department{
-    font-size:12px;
+
+    font-size:11px;
+
     font-weight:bold;
+
 }
 
 
 .ris-header .office{
-    font-size:10px;
+
+    font-size:9px;
+
 }
 
 
 .ris-title{
+
     font-size:14px;
+
     font-weight:bold;
-    margin:8px 0 12px 0;
+
+    margin:7px 0 9px 0;
+
 }
 
 
 /* ==========================================================
    TOP INFORMATION
+   SOLID CONTINUOUS BORDERS
    ========================================================== */
 
 .ris-info{
+
     width:100%;
+
     border-collapse:collapse;
-    margin-bottom:6px;
+
+    table-layout:fixed;
+
 }
 
 
 .ris-info td{
-    border:1px solid #000;
+
+    border:1px solid #000 !important;
+
     padding:4px 5px;
-    height:22px;
+
+    height:23px;
+
+    vertical-align:middle;
+
 }
 
 
 .ris-info .label{
+
     font-weight:bold;
+
 }
 
 
 /* ==========================================================
-   MAIN RIS TABLE
+   MAIN DOST RIS TABLE
    ========================================================== */
 
 .ris-table{
+
     width:100%;
+
     border-collapse:collapse;
+
     table-layout:fixed;
+
+    margin:0;
+
 }
 
 
 .ris-table th,
 .ris-table td{
-    border:1px solid #000;
-    padding:4px;
+
+    border:1px solid #000 !important;
+
+    padding:3px 4px;
+
     vertical-align:middle;
+
+    line-height:1.15;
+
 }
 
 
 .ris-table th{
+
     background:#fff !important;
+
     background-color:#fff !important;
+
+    background-image:none !important;
+
     color:#000 !important;
+
     text-align:center;
+
     font-weight:bold;
-}
 
-
-.ris-table .requisition{
-    text-align:center;
-    font-weight:bold;
-}
-
-
-.ris-table .stock{
-    text-align:center;
-    font-weight:bold;
-}
-
-
-.ris-table .issue{
-    text-align:center;
-    font-weight:bold;
-}
-
-
-/* COLUMN WIDTHS */
-
-.ris-table .stock-no{
-    width:12%;
-}
-
-
-.ris-table .unit{
-    width:8%;
-}
-
-
-.ris-table .description{
-    width:30%;
-}
-
-
-.ris-table .quantity{
-    width:10%;
-}
-
-
-.ris-table .yesno{
-    width:8%;
-}
-
-
-.ris-table .unit-cost{
-    width:12%;
-}
-
-
-.ris-table .remarks{
-    width:20%;
 }
 
 
 .ris-table tbody td{
-    height:28px;
+
+    height:27px;
+
+}
+
+
+/* ==========================================================
+   COLUMN WIDTHS
+   ========================================================== */
+
+.stock-no{
+    width:12%;
+}
+
+.unit{
+    width:8%;
+}
+
+.description{
+    width:29%;
+}
+
+.quantity{
+    width:9%;
+}
+
+.available{
+    width:7%;
+}
+
+.unit-cost{
+    width:13%;
+}
+
+.remarks{
+    width:15%;
+}
+
+
+/* ==========================================================
+   ALIGNMENT
+   ========================================================== */
+
+.center{
+
+    text-align:center !important;
+
+}
+
+
+.money{
+
+    text-align:right !important;
+
 }
 
 
@@ -5838,80 +5923,129 @@ body{
    ========================================================== */
 
 .ris-purpose{
+
     width:100%;
+
     border-collapse:collapse;
-    margin-top:6px;
+
+    margin:0;
+
 }
 
 
 .ris-purpose td{
-    border:1px solid #000;
+
+    border:1px solid #000 !important;
+
     padding:5px;
-    height:45px;
+
+    height:48px;
+
     vertical-align:top;
+
 }
 
 
 .ris-purpose .label{
+
     font-weight:bold;
+
 }
 
 
 /* ==========================================================
-   SIGNATURES
+   SIGNATURE TABLE
+   SOLID CONTINUOUS BORDERS
    ========================================================== */
 
 .ris-signatures{
+
     width:100%;
+
     border-collapse:collapse;
-    margin-top:20px;
+
     table-layout:fixed;
+
+    margin-top:0;
+
 }
 
 
 .ris-signatures th,
 .ris-signatures td{
-    border:1px solid #000;
-    padding:4px;
+
+    border:1px solid #000 !important;
+
 }
 
 
 .ris-signatures th{
+
     background:#fff !important;
+
+    background-color:#fff !important;
+
     color:#000 !important;
+
     text-align:left;
+
+    padding:4px;
+
     font-weight:bold;
+
 }
 
 
 .ris-signatures td{
-    height:85px;
+
+    height:82px;
+
+    padding:4px;
+
     vertical-align:top;
+
 }
 
 
+/* ==========================================================
+   SIGNATURE LINE
+   ========================================================== */
+
 .signature-line{
-    margin-top:38px;
+
+    width:90%;
+
+    margin:35px auto 4px auto;
+
     border-bottom:1px solid #000;
+
     height:1px;
+
 }
 
 
 .signature-name{
+
     text-align:center;
+
     font-weight:bold;
-    margin-top:4px;
+
 }
 
 
 .signature-position{
+
     text-align:center;
-    font-size:9px;
+
+    font-size:8px;
+
 }
 
 
 .signature-date{
-    margin-top:8px;
+
+    margin-top:7px;
+
 }
 
 
@@ -5919,21 +6053,39 @@ body{
 
     html,
     body{
-        margin:0;
-        padding:0;
+
+        margin:0 !important;
+
+        padding:0 !important;
+
+    }
+
+
+    table{
+
+        border-collapse:collapse !important;
+
+        border-spacing:0 !important;
+
     }
 
 
     .ris-table th,
     .ris-signatures th{
+
         background:#fff !important;
+
         background-color:#fff !important;
+
         color:#000 !important;
+
     }
 
 
     tr{
-        page-break-inside:avoid;
+
+        page-break-inside:avoid !important;
+
     }
 
 }
@@ -5947,7 +6099,7 @@ body{
 
 
 <!-- ========================================================
-     HEADER
+     DOST HEADER
      ======================================================== -->
 
 <div class="ris-header">
@@ -5976,26 +6128,43 @@ body{
 
 
 <!-- ========================================================
-     TOP INFORMATION
+     RIS INFORMATION
      ======================================================== -->
 
 <table class="ris-info">
 
     <tr>
 
-        <td>
-            <span class="label">Entity Name:</span>
+        <td style="width:40%;">
+
+            <span class="label">
+                Entity Name:
+            </span>
+
             DOST RO II
+
         </td>
 
-        <td>
-            <span class="label">Fund Cluster:</span>
+
+        <td style="width:27%;">
+
+            <span class="label">
+                Fund Cluster:
+            </span>
+
             01
+
         </td>
 
-        <td>
-            <span class="label">RIS No.:</span>
-            ${currentRIS.id}
+
+        <td style="width:33%;">
+
+            <span class="label">
+                RIS No.:
+            </span>
+
+            ${currentRIS.id || ""}
+
         </td>
 
     </tr>
@@ -6004,13 +6173,29 @@ body{
     <tr>
 
         <td>
-            <span class="label">Division:</span>
+
+            <span class="label">
+                Division:
+            </span>
+
             ${currentRIS.division || ""}
+
         </td>
 
+
         <td colspan="2">
-            <span class="label">Date:</span>
-            ${new Date().toLocaleDateString()}
+
+            <span class="label">
+                Date:
+            </span>
+
+            ${
+                currentRIS.issueDate ||
+                currentRIS.risDate ||
+                currentRIS.date ||
+                new Date().toLocaleDateString()
+            }
+
         </td>
 
     </tr>
@@ -6019,8 +6204,13 @@ body{
     <tr>
 
         <td colspan="3">
-            <span class="label">Requestor:</span>
+
+            <span class="label">
+                Requestor:
+            </span>
+
             ${currentRIS.requestor || ""}
+
         </td>
 
     </tr>
@@ -6029,24 +6219,40 @@ body{
 
 
 <!-- ========================================================
-     MAIN TABLE
+     MAIN DOST RIS TABLE
      ======================================================== -->
 
 <table class="ris-table">
+
+    <colgroup>
+
+        <col class="stock-no">
+        <col class="unit">
+        <col class="description">
+        <col class="quantity">
+
+        <col class="available">
+        <col class="available">
+
+        <col class="unit-cost">
+        <col class="remarks">
+
+    </colgroup>
+
 
     <thead>
 
         <tr>
 
-            <th colspan="4" class="requisition">
+            <th colspan="4">
                 REQUISITION
             </th>
 
-            <th colspan="2" class="stock">
+            <th colspan="2">
                 STOCK AVAILABLE?
             </th>
 
-            <th colspan="2" class="issue">
+            <th colspan="2">
                 ISSUE
             </th>
 
@@ -6055,35 +6261,35 @@ body{
 
         <tr>
 
-            <th class="stock-no">
+            <th>
                 Stock No.
             </th>
 
-            <th class="unit">
+            <th>
                 Unit
             </th>
 
-            <th class="description">
+            <th>
                 Description
             </th>
 
-            <th class="quantity">
+            <th>
                 Quantity
             </th>
 
-            <th class="yesno">
+            <th>
                 Yes
             </th>
 
-            <th class="yesno">
+            <th>
                 No
             </th>
 
-            <th class="unit-cost">
+            <th>
                 Unit Cost
             </th>
 
-            <th class="remarks">
+            <th>
                 Remarks
             </th>
 
@@ -6115,7 +6321,7 @@ body{
                 Purpose:
             </span>
 
-            ${currentRIS.purpose || "For office use"}
+            ${currentRIS.purpose || ""}
 
         </td>
 
@@ -6177,11 +6383,11 @@ body{
             <div class="signature-line"></div>
 
             <div class="signature-name">
-                __________________________
+                ALDWIN T. CRUZ
             </div>
 
             <div class="signature-position">
-                Chief, Administrative Services
+                Administrative Officer V - Supply
             </div>
 
             <div class="signature-date">
@@ -6196,11 +6402,11 @@ body{
             <div class="signature-line"></div>
 
             <div class="signature-name">
-                __________________________
+                LUZVIMINDA B. BUCAYU
             </div>
 
             <div class="signature-position">
-                Supply Officer
+                Project Administrative Aide VI
             </div>
 
             <div class="signature-date">
@@ -6240,16 +6446,16 @@ body{
 `);
 
 
-win.document.close();
+    win.document.close();
 
 
-setTimeout(()=>{
+    setTimeout(()=>{
 
-    win.focus();
+        win.focus();
 
-    win.print();
+        win.print();
 
-},500);
+    },500);
 
 }
 

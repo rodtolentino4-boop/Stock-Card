@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -2278,6 +2279,9 @@ Manage System Users
 <option>pcs</option>
 <option>box</option>
 <option>ream</option>
+<option>can</option>
+<option>jar</option>
+<option>pad</option>
 <option>unit</option>
 <option>set</option>
 <option>pack</option>
@@ -2370,6 +2374,9 @@ id="stockDate">
 <option>pcs</option>
 <option>box</option>
 <option>ream</option>
+<option>can</option>
+<option>jar</option>
+<option>pad</option>
 <option>unit</option>
 <option>set</option>
 <option>pack</option>
@@ -4825,6 +4832,9 @@ document.getElementById("risPosition").value,
 division:
 document.getElementById("risDivision").value,
 
+/* SAVE REQUESTOR'S UPLOADED SIGNATURE WITH THE RIS */
+signature: currentUser.signature || "",
+
 purpose:risPurpose.value,
 
 status:"PENDING",
@@ -5573,9 +5583,34 @@ function closeViewRIS(){
 }
 
 
-function printRIS(){
+async function printRIS(){
 
     if(!currentRIS) return;
+
+    /* ==========================================================
+       GET REQUESTOR'S UPLOADED SIGNATURE
+       New RIS records already contain the signature.
+       Older RIS records are checked against the users collection.
+       ========================================================== */
+    let requestorSignature = currentRIS.signature || "";
+
+    if(!requestorSignature && currentRIS.username){
+        try{
+            const q = query(
+                collection(db, "users"),
+                where("username", "==", currentRIS.username)
+            );
+
+            const snap = await getDocs(q);
+
+            if(!snap.empty){
+                const userData = snap.docs[0].data();
+                requestorSignature = userData.signature || "";
+            }
+        }catch(error){
+            console.error("Unable to load requestor signature:", error);
+        }
+    }
 
 
     /* ==========================================================
@@ -6361,7 +6396,15 @@ body{
 
         <td>
 
-            <div class="signature-line"></div>
+            ${
+                requestorSignature
+                    ? `<div style="height:35px;display:flex;align-items:flex-end;justify-content:center;">
+                            <img
+                                src="${requestorSignature}"
+                                style="max-width:85%;max-height:35px;object-fit:contain;display:block;">
+                       </div>`
+                    : `<div class="signature-line"></div>`
+            }
 
             <div class="signature-name">
                 ${currentRIS.requestor || ""}

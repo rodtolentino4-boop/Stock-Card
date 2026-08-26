@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Coffee Muna ☕ | System Maintenance</title>
+<title>System Maintenance</title>
 
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
 
 *{
     margin:0;
@@ -19,2102 +14,476 @@
     box-sizing:border-box;
 }
 
-html,
 body{
-    width:100%;
-    min-height:100%;
-}
-
-body{
-
-    font-family:
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
     min-height:100vh;
-
-    overflow-x:hidden;
-
-    color:#ffffff;
+    font-family: "Segoe UI", Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
 
     background:
-        radial-gradient(
-            circle at 15% 15%,
-            rgba(255,255,255,.08),
-            transparent 25%
-        ),
-        radial-gradient(
-            circle at 85% 85%,
-            rgba(214,150,90,.10),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #120806,
-            #2b150d,
-            #4b2615,
-            #180b07
-        );
-
-    transition:
-        background 1s ease;
-
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,.12), transparent 25%),
+        radial-gradient(circle at 85% 80%, rgba(255,255,255,.08), transparent 25%),
+        linear-gradient(135deg,#24140d,#4a2818,#24140d);
 }
 
+/* Background circles */
 
-/* =========================================================
-   BACKGROUND GLOW
-========================================================= */
+.bg-circle{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(2px);
+    opacity:.15;
+    background:#d9a066;
+}
 
-.bg-glow{
+.circle1{
+    width:400px;
+    height:400px;
+    top:-180px;
+    left:-150px;
+}
 
-    position:fixed;
-
+.circle2{
     width:500px;
     height:500px;
-
-    border-radius:50%;
-
-    filter:blur(70px);
-
-    opacity:.5;
-
-    pointer-events:none;
-
+    bottom:-250px;
+    right:-180px;
 }
 
-.bg-glow.one{
+/* Main Card */
 
-    top:-260px;
-    left:-220px;
-
-    background:
-        rgba(216,155,99,.18);
-
-}
-
-.bg-glow.two{
-
-    bottom:-280px;
-    right:-220px;
-
-    background:
-        rgba(255,192,120,.12);
-
-}
-
-
-/* =========================================================
-   FLOATING PARTICLES
-========================================================= */
-
-.particle{
-
-    position:fixed;
-
-    bottom:-20px;
-
-    width:6px;
-    height:6px;
-
-    border-radius:50%;
-
-    background:
-        rgba(255,224,195,.4);
-
-    pointer-events:none;
-
-    animation:
-        floatUp
-        linear
-        infinite;
-
-}
-
-.p1{
-    left:8%;
-    animation-duration:15s;
-    animation-delay:0s;
-}
-
-.p2{
-    left:20%;
-    animation-duration:18s;
-    animation-delay:3s;
-}
-
-.p3{
-    left:35%;
-    animation-duration:13s;
-    animation-delay:1s;
-}
-
-.p4{
-    left:50%;
-    animation-duration:19s;
-    animation-delay:5s;
-}
-
-.p5{
-    left:67%;
-    animation-duration:16s;
-    animation-delay:2s;
-}
-
-.p6{
-    left:82%;
-    animation-duration:14s;
-    animation-delay:4s;
-}
-
-.p7{
-    left:94%;
-    animation-duration:20s;
-    animation-delay:7s;
-}
-
-@keyframes floatUp{
-
-    0%{
-        transform:
-            translateY(0)
-            scale(.5);
-
-        opacity:0;
-    }
-
-    15%{
-        opacity:.7;
-    }
-
-    80%{
-        opacity:.5;
-    }
-
-    100%{
-
-        transform:
-            translateY(-110vh)
-            scale(1);
-
-        opacity:0;
-
-    }
-
-}
-
-
-/* =========================================================
-   MAIN WRAPPER
-========================================================= */
-
-.wrapper{
-
-    min-height:100vh;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    padding:
-        30px 15px;
-
-}
-
-
-/* =========================================================
-   MAIN CARD
-========================================================= */
-
-.card{
-
+.maintenance-card{
     position:relative;
+    z-index:2;
 
-    z-index:5;
+    width:min(90%,650px);
 
-    width:100%;
-
-    max-width:780px;
-
-    padding:
-        45px 35px;
+    padding:55px 45px;
 
     text-align:center;
 
-    border-radius:32px;
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.18);
 
-    background:
-        rgba(255,255,255,.075);
-
-    border:
-        1px solid
-        rgba(255,255,255,.15);
-
-    backdrop-filter:
-        blur(20px);
-
-    -webkit-backdrop-filter:
-        blur(20px);
+    border-radius:30px;
 
     box-shadow:
+        0 30px 80px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.12);
 
-        0 35px 100px
-        rgba(0,0,0,.48),
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
 
-        inset 0 1px 0
-        rgba(255,255,255,.10);
+    animation:cardAppear 1s ease;
+}
+
+/* Coffee Icon */
+
+.coffee{
+    width:105px;
+    height:105px;
+
+    margin:0 auto 25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:55px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        145deg,
+        #d79a63,
+        #8b4f2b
+    );
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.3);
 
     animation:
-        cardEnter
-        .9s
-        ease;
-
+        coffeeFloat 3s ease-in-out infinite;
 }
 
-@keyframes cardEnter{
+/* Steam */
 
-    from{
+.steam{
+    position:absolute;
+    top:70px;
+    left:50%;
 
-        opacity:0;
+    font-size:28px;
 
-        transform:
-            translateY(40px)
-            scale(.96);
+    opacity:.7;
 
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:
-            translateY(0)
-            scale(1);
-
-    }
-
+    animation:steamMove 3s ease-in-out infinite;
 }
 
+/* Title */
 
-/* =========================================================
-   STATUS BADGE
-========================================================= */
+h1{
+    color:#fff;
+
+    font-size:42px;
+
+    font-weight:700;
+
+    letter-spacing:-1px;
+
+    margin-bottom:12px;
+}
+
+.subtitle{
+    color:#e7d5c5;
+
+    font-size:18px;
+
+    line-height:1.6;
+
+    margin-bottom:25px;
+}
+
+/* Quote */
+
+.quote{
+    margin:25px auto;
+
+    padding:20px 25px;
+
+    max-width:500px;
+
+    border-left:4px solid #d79a63;
+
+    background:rgba(0,0,0,.18);
+
+    border-radius:12px;
+
+    color:#f3e5d8;
+
+    font-size:17px;
+
+    font-style:italic;
+
+    line-height:1.6;
+}
+
+/* Status */
 
 .status{
-
     display:inline-flex;
 
     align-items:center;
+    gap:10px;
 
-    justify-content:center;
-
-    gap:9px;
-
-    padding:
-        9px 17px;
-
-    margin-bottom:20px;
+    padding:10px 18px;
 
     border-radius:50px;
 
-    background:
-        rgba(255,193,7,.09);
+    background:rgba(255,193,7,.12);
 
-    border:
-        1px solid
-        rgba(255,193,7,.25);
+    border:1px solid rgba(255,193,7,.3);
 
-    color:
-        #ffd27b;
+    color:#ffd27a;
 
-    font-size:13px;
+    font-size:14px;
 
     font-weight:600;
 
-    letter-spacing:.3px;
-
+    margin-top:5px;
 }
 
 .status-dot{
-
-    width:9px;
-    height:9px;
+    width:10px;
+    height:10px;
 
     border-radius:50%;
 
     background:#ffc107;
 
     box-shadow:
-        0 0 12px
-        rgba(255,193,7,.9);
+        0 0 10px #ffc107;
 
-    animation:
-        statusPulse
-        1.5s
-        ease-in-out
-        infinite;
-
+    animation:pulse 1.5s infinite;
 }
 
-@keyframes statusPulse{
+/* Message */
 
-    0%,
-    100%{
+.message{
+    margin-top:25px;
 
-        transform:scale(1);
+    color:#cdbbae;
 
+    font-size:14px;
+
+    line-height:1.7;
+}
+
+/* Footer */
+
+.footer{
+    margin-top:30px;
+
+    color:#9e8878;
+
+    font-size:12px;
+}
+
+.footer strong{
+    color:#d5b095;
+}
+
+/* Animations */
+
+@keyframes cardAppear{
+
+    from{
+        opacity:0;
+        transform:translateY(30px) scale(.97);
+    }
+
+    to{
         opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
 
+@keyframes coffeeFloat{
+
+    0%,100%{
+        transform:translateY(0);
     }
 
     50%{
-
-        transform:scale(1.5);
-
-        opacity:.5;
-
+        transform:translateY(-8px);
     }
-
-}
-
-
-/* =========================================================
-   COFFEE AREA
-========================================================= */
-
-.coffee-area{
-
-    position:relative;
-
-    width:180px;
-    height:180px;
-
-    margin:
-        0 auto 10px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-}
-
-
-/* =========================================================
-   STEAM
-========================================================= */
-
-.steam{
-
-    position:absolute;
-
-    top:4px;
-
-    left:50%;
-
-    font-size:31px;
-
-    opacity:.5;
-
-    pointer-events:none;
-
-    animation:
-        steamMove
-        3s
-        ease-in-out
-        infinite;
-
 }
 
 @keyframes steamMove{
 
     0%{
-
-        transform:
-            translate(-50%,15px)
-            scale(.7);
-
+        transform:translate(-50%,10px);
         opacity:0;
-
-    }
-
-    35%{
-
-        opacity:.7;
-
-    }
-
-    100%{
-
-        transform:
-            translate(-50%,-35px)
-            scale(1.2);
-
-        opacity:0;
-
-    }
-
-}
-
-
-/* =========================================================
-   COFFEE BUTTON
-========================================================= */
-
-.coffee-button{
-
-    width:125px;
-    height:125px;
-
-    border:none;
-
-    border-radius:50%;
-
-    cursor:pointer;
-
-    font-size:65px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #dda06a,
-            #7a3f1f
-        );
-
-    box-shadow:
-
-        0 20px 40px
-        rgba(0,0,0,.4),
-
-        inset 0 3px 6px
-        rgba(255,255,255,.18),
-
-        0 0 0 8px
-        rgba(255,255,255,.035);
-
-    transition:
-        transform .2s,
-        box-shadow .2s;
-
-}
-
-.coffee-button:hover{
-
-    transform:
-        translateY(-8px)
-        rotate(-5deg);
-
-    box-shadow:
-
-        0 27px 50px
-        rgba(0,0,0,.45),
-
-        0 0 35px
-        rgba(218,155,97,.2);
-
-}
-
-.coffee-button:active{
-
-    transform:
-        scale(.87)
-        rotate(5deg);
-
-}
-
-
-/* =========================================================
-   COFFEE SHAKE
-========================================================= */
-
-.coffee-shake{
-
-    animation:
-        coffeeShake
-        .45s
-        ease;
-
-}
-
-@keyframes coffeeShake{
-
-    0%{
-        transform:rotate(0);
-    }
-
-    20%{
-        transform:rotate(-9deg);
     }
 
     40%{
-        transform:rotate(9deg);
-    }
-
-    60%{
-        transform:rotate(-6deg);
-    }
-
-    80%{
-        transform:rotate(5deg);
+        opacity:.8;
     }
 
     100%{
-        transform:rotate(0);
+        transform:translate(-50%,-25px);
+        opacity:0;
     }
-
 }
 
-
-/* =========================================================
-   MAIN TITLE
-========================================================= */
-
-h1{
-
-    margin-bottom:12px;
-
-    font-size:
-        clamp(
-            36px,
-            6vw,
-            53px
-        );
-
-    line-height:1.05;
-
-    letter-spacing:
-        -1.8px;
-
-}
-
-.subtitle{
-
-    max-width:610px;
-
-    margin:
-        0 auto;
-
-    color:
-        #ddcabc;
-
-    font-size:17px;
-
-    line-height:1.7;
-
-}
-
-.subtitle strong{
-
-    color:
-        #f0c79d;
-
-}
-
-
-/* =========================================================
-   MESSAGE BOX
-========================================================= */
-
-.message-box{
-
-    max-width:590px;
-
-    min-height:88px;
-
-    margin:
-        25px auto 18px;
-
-    padding:
-        20px 25px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    border-radius:18px;
-
-    background:
-        rgba(0,0,0,.18);
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    color:
-        #f3dfd0;
-
-    font-size:17px;
-
-    line-height:1.6;
-
-    transition:
-        opacity .25s;
-
-}
-
-
-/* =========================================================
-   PICK-UP LINE BOX
-========================================================= */
-
-.pickup-box{
-
-    margin-top:28px;
-
-    padding:
-        25px;
-
-    border-radius:22px;
-
-    background:
-        rgba(0,0,0,.15);
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-}
-
-.pickup-title{
-
-    font-size:23px;
-
-    margin-bottom:6px;
-
-}
-
-.pickup-subtitle{
-
-    color:
-        #ad998b;
-
-    font-size:12px;
-
-}
-
-
-/* =========================================================
-   PICK-UP LINE DISPLAY
-========================================================= */
-
-.pickup-line{
-
-    min-height:85px;
-
-    margin:
-        18px auto;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:
-        #ffe5d2;
-
-    font-size:17px;
-
-    line-height:1.65;
-
-    max-width:570px;
-
-}
-
-
-/* =========================================================
-   POP ANIMATION
-========================================================= */
-
-.pop{
-
-    animation:
-        popLine
-        .4s
-        ease;
-
-}
-
-@keyframes popLine{
+@keyframes pulse{
 
     0%{
-
-        opacity:0;
-
-        transform:
-            scale(.7);
-
+        transform:scale(1);
+        opacity:1;
     }
 
-    70%{
-
-        transform:
-            scale(1.04);
-
+    50%{
+        transform:scale(1.4);
+        opacity:.5;
     }
 
     100%{
-
+        transform:scale(1);
         opacity:1;
-
-        transform:
-            scale(1);
-
     }
-
 }
 
-
-/* =========================================================
-   WHY BUTTON
-========================================================= */
-
-.why-button{
-
-    border:none;
-
-    padding:
-        13px 30px;
-
-    border-radius:50px;
-
-    cursor:pointer;
-
-    color:
-        #32170b;
-
-    background:
-        linear-gradient(
-            135deg,
-            #f3c795,
-            #d98d52
-        );
-
-    font-size:16px;
-
-    font-weight:700;
-
-    box-shadow:
-        0 10px 25px
-        rgba(0,0,0,.25);
-
-    transition:
-        transform .2s,
-        box-shadow .2s;
-
-}
-
-.why-button:hover{
-
-    transform:
-        translateY(-3px)
-        scale(1.03);
-
-    box-shadow:
-        0 15px 30px
-        rgba(0,0,0,.3);
-
-}
-
-.why-button:active{
-
-    transform:
-        scale(.91);
-
-}
-
-
-/* =========================================================
-   CORNY WARNING
-========================================================= */
-
-.corny-warning{
-
-    margin-top:12px;
-
-    color:
-        #8f7b6c;
-
-    font-size:11px;
-
-}
-
-
-/* =========================================================
-   KILIG COUNTER
-========================================================= */
-
-.counter{
-
-    margin-top:12px;
-
-    color:
-        #9d8979;
-
-    font-size:12px;
-
-}
-
-.counter strong{
-
-    color:
-        #e6b98f;
-
-    font-size:15px;
-
-}
-
-
-/* =========================================================
-   OTHER BUTTONS
-========================================================= */
-
-.controls{
-
-    display:flex;
-
-    justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:10px;
-
-    margin-top:22px;
-
-}
-
-.action-button{
-
-    border:none;
-
-    padding:
-        11px 17px;
-
-    border-radius:12px;
-
-    cursor:pointer;
-
-    color:
-        #f6e8dd;
-
-    background:
-        rgba(255,255,255,.08);
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    font-size:13px;
-
-    font-weight:600;
-
-    transition:
-        .2s;
-
-}
-
-.action-button:hover{
-
-    background:
-        rgba(255,255,255,.15);
-
-    transform:
-        translateY(-2px);
-
-}
-
-.action-button:active{
-
-    transform:
-        scale(.95);
-
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-
-    margin-top:28px;
-
-    color:
-        #8d7869;
-
-    font-size:12px;
-
-    line-height:1.7;
-
-}
-
-.footer strong{
-
-    color:
-        #c5a994;
-
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-
-    position:fixed;
-
-    z-index:1000;
-
-    left:50%;
-
-    bottom:30px;
-
-    padding:
-        13px 20px;
-
-    border-radius:50px;
-
-    background:
-        rgba(25,14,9,.94);
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    color:
-        #f5dfcf;
-
-    font-size:13px;
-
-    box-shadow:
-        0 12px 35px
-        rgba(0,0,0,.4);
-
-    opacity:0;
-
-    pointer-events:none;
-
-    transform:
-        translate(-50%,30px);
-
-    transition:
-        .3s;
-
-}
-
-.toast.show{
-
-    opacity:1;
-
-    transform:
-        translate(-50%,0);
-
-}
-
-
-/* =========================================================
-   RIPPLE
-========================================================= */
-
-.ripple{
-
-    position:fixed;
-
-    z-index:999;
-
-    width:20px;
-    height:20px;
-
-    border-radius:50%;
-
-    border:
-        2px solid
-        rgba(255,218,180,.65);
-
-    pointer-events:none;
-
-    animation:
-        rippleEffect
-        .7s
-        ease-out
-        forwards;
-
-}
-
-@keyframes rippleEffect{
-
-    from{
-
-        transform:
-            translate(-50%,-50%)
-            scale(1);
-
-        opacity:1;
-
-    }
-
-    to{
-
-        transform:
-            translate(-50%,-50%)
-            scale(8);
-
-        opacity:0;
-
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
+/* Mobile */
 
 @media(max-width:600px){
 
-    .wrapper{
-
-        padding:
-            20px 10px;
-
+    .maintenance-card{
+        padding:40px 25px;
     }
 
-    .card{
-
-        padding:
-            35px 18px;
-
-        border-radius:25px;
-
-    }
-
-    .coffee-area{
-
-        width:155px;
-        height:155px;
-
-    }
-
-    .coffee-button{
-
-        width:108px;
-        height:108px;
-
-        font-size:55px;
-
+    h1{
+        font-size:32px;
     }
 
     .subtitle{
+        font-size:16px;
+    }
 
+    .quote{
         font-size:15px;
-
     }
 
-    .message-box{
-
-        font-size:15px;
-
-        padding:
-            18px;
-
+    .coffee{
+        width:90px;
+        height:90px;
+        font-size:45px;
     }
-
-    .pickup-box{
-
-        padding:
-            20px 14px;
-
-    }
-
-    .pickup-line{
-
-        font-size:15px;
-
-    }
-
-}
-
-
-/* =========================================================
-   CHILL MODE
-========================================================= */
-
-body.chill-mode{
-
-    background:
-
-        radial-gradient(
-            circle at 50% 25%,
-            rgba(140,190,170,.15),
-            transparent 35%
-        ),
-
-        linear-gradient(
-            135deg,
-            #0d201c,
-            #17362e,
-            #0b1916
-        );
-
-}
-
-body.chill-mode .card{
-
-    background:
-        rgba(255,255,255,.055);
 
 }
 
 </style>
-
 </head>
-
 
 <body>
 
+<!-- Background -->
 
-<!-- =====================================================
-     BACKGROUND
-===================================================== -->
-
-<div class="bg-glow one"></div>
-<div class="bg-glow two"></div>
+<div class="bg-circle circle1"></div>
+<div class="bg-circle circle2"></div>
 
 
-<div class="particle p1"></div>
-<div class="particle p2"></div>
-<div class="particle p3"></div>
-<div class="particle p4"></div>
-<div class="particle p5"></div>
-<div class="particle p6"></div>
-<div class="particle p7"></div>
+<!-- Maintenance Card -->
 
+<div class="maintenance-card">
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
+    <div class="steam">♨</div>
 
-<div class="wrapper">
-
-<div class="card">
-
-
-    <!-- STATUS -->
-
-    <div class="status">
-
-        <span class="status-dot"></span>
-
-        SYSTEM UNDER MAINTENANCE
-
+    <div class="coffee">
+        ☕
     </div>
 
-
-    <!-- COFFEE -->
-
-    <div class="coffee-area">
-
-        <div class="steam">
-
-            ♨
-
-        </div>
-
-
-        <button
-            class="coffee-button"
-            id="coffeeButton"
-            title="Click the coffee!">
-
-            ☕
-
-        </button>
-
-    </div>
-
-
-    <!-- TITLE -->
 
     <h1>
-
-        Coffee Muna 😌☕
-
+        Coffee Muna ☕
     </h1>
 
 
     <div class="subtitle">
 
         Our system is currently taking
-        a little coffee break.
+        a little break.
 
         <br>
 
-        Don't worry —
-        we're working behind the scenes.
-
-        <br>
-
-        <strong>
-            Habang naghihintay ka...
-            baka gusto mo munang kiligin. 😂❤️
-        </strong>
+        We're doing some improvements
+        behind the scenes.
 
     </div>
 
 
-    <!-- MAIN MESSAGE -->
+    <div class="quote">
 
-    <div
-        class="message-box"
-        id="messageBox">
-
-        “Coffee muna,
-        pampatanggal stress.
+        “Coffee muna, pampatanggal stress.
+        <br>
         Babalik din kami agad.” ☕😌
 
     </div>
 
 
-    <!-- =================================================
-         PICK UP LINE MINI GAME
-    ================================================== -->
+    <div class="status">
 
-    <div class="pickup-box">
+        <span class="status-dot"></span>
 
-
-        <div class="pickup-title">
-
-            💘 BAKIT?
-
-        </div>
-
-
-        <div class="pickup-subtitle">
-
-            Click mo para malaman mo kung bakit...
-            😂
-
-        </div>
-
-
-        <div
-            class="pickup-line"
-            id="pickupLine">
-
-            “Ready ka na ba sa pinaka-corny
-            na tanong ng maintenance page?” 😂
-
-        </div>
-
-
-        <button
-            class="why-button"
-            id="whyButton">
-
-            ❓ BAKIT?
-
-        </button>
-
-
-        <div class="corny-warning">
-
-            ⚠️ Warning:
-            Possible corny lines ahead.
-            Please prepare your heart. 😂
-
-        </div>
-
-
-        <div class="counter">
-
-            💘 Kilig attempts:
-
-            <strong id="kiligCounter">
-                0
-            </strong>
-
-        </div>
+        System Under Maintenance
 
     </div>
 
 
-    <!-- =================================================
-         OTHER INTERACTIVE BUTTONS
-    ================================================== -->
+    <div class="message">
 
-    <div class="controls">
-
-
-        <button
-            class="action-button"
-            id="messageButton">
-
-            💬 Tell Me Something
-
-        </button>
-
-
-        <button
-            class="action-button"
-            id="relaxButton">
-
-            🧘 Relax
-
-        </button>
-
-
-        <button
-            class="action-button"
-            id="chillButton">
-
-            🌿 Chill Mode
-
-        </button>
-
-
-        <button
-            class="action-button"
-            id="panicButton">
-
-            😌 Don't Panic
-
-        </button>
-
-
-    </div>
-
-
-    <!-- =================================================
-         FOOTER
-    ================================================== -->
-
-    <div class="footer">
-
-        Your data is safe. ❤️
+        Don't worry — your data is safe.
 
         <br>
 
-        We're currently performing
-        system maintenance and improvements.
+        Our team is currently performing
+        system maintenance and improvements
+        to give you a better experience.
 
         <br><br>
 
-        <strong>
-            Thank you for your patience
-            and understanding.
-        </strong>
+        Please try again later.
 
     </div>
 
 
-</div>
+    <div class="footer">
 
-</div>
+        <strong>Integrated System</strong>
+        <br>
 
+        Thank you for your patience and understanding. ❤️
 
-<!-- TOAST -->
-
-<div
-    class="toast"
-    id="toast">
-
-    ☕ Coffee time!
+    </div>
 
 </div>
 
 
 <script>
 
+/* Optional rotating messages */
 
-/* =========================================================
-   PICK-UP LINES
-========================================================= */
+const messages = [
 
-const pickupLines = [
+    "Coffee muna, pampatanggal stress. ☕😌",
 
-    "Bakit? Kasi love kita... ESTE! Coffee pala! ☕😂",
+    "System is brewing something better. ☕",
 
-    "Bakit? Kasi parang kape ka... hindi kita kailangan, pero gusto kita. ☕❤️",
+    "Almost ready... konting kape pa. 😄",
 
-    "Bakit? Kasi ikaw ang dahilan kung bakit mabilis heartbeat ko. Baka kailangan ko ng technician. 😂❤️",
+    "We're making things better for you. ❤️",
 
-    "Bakit? Kasi kahit maintenance ang system, ikaw pa rin ang gusto kong i-access. 😂",
-
-    "Bakit? Kasi parang WiFi ka... kapag wala ka, wala akong connection. 😂📶",
-
-    "Bakit? Kasi ikaw ang favorite notification ko. Kahit walang sound, gusto kitang makita. 😏",
-
-    "Bakit? Kasi kapag ngumiti ka, parang na-refresh buong araw ko. 😊",
-
-    "Bakit? Kasi parang password ka... hindi kita makalimutan kahit ilang beses kong i-reset. 😂",
-
-    "Bakit? Kasi ikaw ang required field sa buhay ko. Kapag wala ka, incomplete. 😭❤️",
-
-    "Bakit? Kasi kung coffee break ito, gusto kitang ka-break. ☕😂",
-
-    "Bakit? Kasi ikaw ang dahilan kung bakit ayokong i-close ang tab na 'to. 😏",
-
-    "Bakit? Kasi kahit ilang beses mag-reload, ikaw pa rin ang lumalabas sa isip ko. 😂",
-
-    "Bakit? Kasi ikaw ang favorite bug ko... ayaw kitang i-fix. 😏❤️",
-
-    "Bakit? Kasi kapag ikaw ang kausap, hindi ko kailangan ng refresh. 😊",
-
-    "Bakit? Kasi parang system update ka... hinihintay kita kahit matagal. 😭",
-
-    "Bakit? Kasi ikaw ang dahilan kung bakit ayokong matapos ang maintenance. 😂❤️",
-
-    "Bakit? Kasi kapag nandyan ka, automatic akong happy. Walang coding required. 😂",
-
-    "Bakit? Kasi ikaw ang mas gusto kong ka-share kaysa sa kape ko. At seryoso ako doon. 😌❤️",
-
-    "Bakit? Kasi parang kape ka... once matikman, hahanapin-hanapin. 😂☕",
-
-    "Bakit? Kasi ikaw ang dahilan kung bakit nagkakape ako... este, nagkaka-crush ako. 😂",
-
-    "Bakit? Kasi ikaw ang kailangan ko para mawala stress ko. 😌❤️",
-
-    "Bakit? Kasi kahit maintenance ang mundo, okay lang basta online ka sa puso ko. 😂",
-
-    "Bakit? Kasi kapag ikaw kausap ko, nawawala ang system error sa puso ko. 😂❤️",
-
-    "Bakit? Kasi parang coffee ka... gusto kitang kasama every morning. ☕❤️",
-
-    "Bakit? Kasi ayoko nang mag-reload. Gusto ko ikaw na lang ang mag-load sa puso ko. 😂❤️",
-
-    "Bakit? Kasi ikaw ang dahilan kung bakit hindi boring ang maintenance. 😏☕",
-
-    "Bakit? Kasi kahit offline ang system, online ang feelings ko. 😂❤️",
-
-    "Bakit? Kasi ikaw ang notification na ayokong i-dismiss. 😏",
-
-    "Bakit? Kasi parang coffee ka... masarap ka kapag kasama sa morning. ☕😂",
-
-    "Bakit? Kasi kahit maraming tabs ang buhay, ikaw ang gusto kong naka-pin. 😂❤️"
+    "Please wait while we finish the improvements."
 
 ];
 
+let messageIndex = 0;
 
-/* =========================================================
-   VARIABLES
-========================================================= */
+const quote = document.querySelector(".quote");
 
-let kiligCount = 0;
+setInterval(() => {
 
-let lastPickupIndex = -1;
+    messageIndex++;
 
-
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const whyButton =
-    document.getElementById(
-        "whyButton"
-    );
-
-const pickupLine =
-    document.getElementById(
-        "pickupLine"
-    );
-
-const kiligCounter =
-    document.getElementById(
-        "kiligCounter"
-    );
-
-const coffeeButton =
-    document.getElementById(
-        "coffeeButton"
-    );
-
-const messageBox =
-    document.getElementById(
-        "messageBox"
-    );
-
-const toast =
-    document.getElementById(
-        "toast"
-    );
-
-
-/* =========================================================
-   RANDOM PICK-UP LINE
-========================================================= */
-
-function getRandomPickupLine(){
-
-    let index;
-
-    do{
-
-        index =
-            Math.floor(
-                Math.random() *
-                pickupLines.length
-            );
-
+    if(messageIndex >= messages.length){
+        messageIndex = 0;
     }
 
-    while(
-        index === lastPickupIndex &&
-        pickupLines.length > 1
-    );
+    quote.style.opacity = "0";
+
+    setTimeout(() => {
+
+        quote.innerHTML =
+            "“" + messages[messageIndex] + "”";
+
+        quote.style.opacity = "1";
+
+    },500);
+
+},5000);
 
 
-    lastPickupIndex =
-        index;
+/* Browser title animation */
 
+let titles = [
 
-    return pickupLines[index];
+    "System Maintenance ☕",
 
-}
+    "Coffee Muna ☕",
 
+    "Almost Ready...",
 
-/* =========================================================
-   BAKIT BUTTON
-========================================================= */
+    "Please Wait..."
 
-whyButton.addEventListener(
-    "click",
-    function(){
+];
 
-        kiligCount++;
+let titleIndex = 0;
 
+setInterval(() => {
 
-        kiligCounter.textContent =
-            kiligCount;
+    titleIndex++;
 
-
-        pickupLine.classList.remove(
-            "pop"
-        );
-
-
-        void pickupLine.offsetWidth;
-
-
-        pickupLine.classList.add(
-            "pop"
-        );
-
-
-        /* SPECIAL MESSAGES */
-
-        if(kiligCount === 5){
-
-            pickupLine.textContent =
-                "“Bakit limang beses ka nang nag-click? Baka gusto mo talaga akong kausap. 😏😂”";
-
-            showToast(
-                "😏 Uy... interested?"
-            );
-
-            return;
-
-        }
-
-
-        if(kiligCount === 10){
-
-            pickupLine.textContent =
-                "“10 times na?! Hindi na ito maintenance... relasyon na 'to. 😂❤️”";
-
-            showToast(
-                "💘 RELATIONSHIP MODE?"
-            );
-
-            return;
-
-        }
-
-
-        if(kiligCount === 20){
-
-            pickupLine.textContent =
-                "“CONGRATULATIONS! Na-unlock mo ang SECRET KILIG MODE! 💘☕😂”";
-
-            showToast(
-                "🏆 Kilig Master Unlocked!"
-            );
-
-            return;
-
-        }
-
-
-        if(kiligCount === 30){
-
-            pickupLine.textContent =
-                "“30 clicks?! Bestie, maintenance page lang 'to. Baka ma-inlove ka na. 😂❤️☕”";
-
-            showToast(
-                "😂 AYAN NA!"
-            );
-
-            return;
-
-        }
-
-
-        pickupLine.textContent =
-            getRandomPickupLine();
-
-
-        showToast(
-            "😂 Corny ba? Isa pa!"
-        );
-
+    if(titleIndex >= titles.length){
+        titleIndex = 0;
     }
-);
 
+    document.title = titles[titleIndex];
 
-/* =========================================================
-   COFFEE BUTTON
-========================================================= */
-
-coffeeButton.addEventListener(
-    "click",
-    function(){
-
-        coffeeButton.classList.remove(
-            "coffee-shake"
-        );
-
-
-        void coffeeButton.offsetWidth;
-
-
-        coffeeButton.classList.add(
-            "coffee-shake"
-        );
-
-
-        const coffeeMessages = [
-
-            "“Sip sip hooray! ☕”",
-
-            "“Kape muna bago stress. 😌☕”",
-
-            "“Gising ka pa ba? Coffee ulit!” 😂",
-
-            "“One coffee = one less stress.” ☕",
-
-            "“Coffee date? Este... coffee break!” 😂",
-
-            "“Don't forget to breathe. And drink coffee.” 😌",
-
-            "“System is brewing... ☕”"
-
-        ];
-
-
-        messageBox.textContent =
-            coffeeMessages[
-                Math.floor(
-                    Math.random() *
-                    coffeeMessages.length
-                )
-            ];
-
-
-        showToast(
-            "☕ Coffee delivered!"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   RANDOM MESSAGE
-========================================================= */
-
-document
-.getElementById("messageButton")
-.addEventListener(
-    "click",
-    function(){
-
-        const messages = [
-
-            "“Hindi sira ang system... nagkakape lang kami.” 😂☕",
-
-            "“Maintenance lang 'to. Hindi breakup.” 😂❤️",
-
-            "“Take a deep breath. Everything will be okay.” 😌",
-
-            "“Kung pagod ka na, coffee muna tayo.” ☕",
-
-            "“Your data is safe. Your heart... hindi namin sure.” 😂",
-
-            "“Konting patience lang. Almost ready na!”",
-
-            "“Drink water. Drink coffee. Repeat.” ☕",
-
-            "“Mas kinakabahan pa yung developer kaysa sa'yo.” 😂",
-
-            "“Relax. We're working on it behind the scenes.” ❤️"
-
-        ];
-
-
-        messageBox.textContent =
-            messages[
-                Math.floor(
-                    Math.random() *
-                    messages.length
-                )
-            ];
-
-    }
-);
-
-
-/* =========================================================
-   RELAX
-========================================================= */
-
-document
-.getElementById("relaxButton")
-.addEventListener(
-    "click",
-    function(){
-
-        messageBox.textContent =
-            "🌬️ Inhale slowly... hold... exhale... 😌 You deserve a little break.";
-
-        showToast(
-            "🧘 Take a deep breath."
-        );
-
-    }
-);
-
-
-/* =========================================================
-   CHILL MODE
-========================================================= */
-
-document
-.getElementById("chillButton")
-.addEventListener(
-    "click",
-    function(){
-
-        document.body.classList.toggle(
-            "chill-mode"
-        );
-
-
-        if(
-            document.body.classList.contains(
-                "chill-mode"
-            )
-        ){
-
-            messageBox.textContent =
-                "🌿 Chill Mode activated. Stress level: LOW. Coffee level: HIGH. ☕😌";
-
-            showToast(
-                "🌿 Chill Mode ON"
-            );
-
-        }
-
-        else{
-
-            messageBox.textContent =
-                "☕ Coffee Mode activated. Back to business! 😂";
-
-            showToast(
-                "☕ Coffee Mode ON"
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   DON'T PANIC
-========================================================= */
-
-document
-.getElementById("panicButton")
-.addEventListener(
-    "click",
-    function(){
-
-        const panicMessages = [
-
-            "😌 Don't panic. Coffee muna.",
-
-            "😂 Kalma lang bestie.",
-
-            "☕ Everything is under control... hopefully. 😂",
-
-            "🧘 Breathe in. Breathe out.",
-
-            "❤️ Okay lang yan. We're working on it.",
-
-            "😎 Stay calm. System admins are on it.",
-
-            "☕ Have some imaginary coffee.",
-
-            "😂 Relax. Hindi mawawala ang data mo."
-
-        ];
-
-
-        messageBox.textContent =
-            panicMessages[
-                Math.floor(
-                    Math.random() *
-                    panicMessages.length
-                )
-            ];
-
-
-        showToast(
-            "😌 Don't panic!"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-let toastTimer;
-
-
-function showToast(text){
-
-    toast.textContent =
-        text;
-
-
-    toast.classList.add(
-        "show"
-    );
-
-
-    clearTimeout(
-        toastTimer
-    );
-
-
-    toastTimer =
-        setTimeout(
-            function(){
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            2300
-        );
-
-}
-
-
-/* =========================================================
-   CLICK RIPPLE
-========================================================= */
-
-document.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target.tagName ===
-            "BUTTON"
-        ){
-
-            createRipple(
-                event.clientX,
-                event.clientY
-            );
-
-        }
-
-    }
-);
-
-
-function createRipple(x,y){
-
-    const ripple =
-        document.createElement(
-            "div"
-        );
-
-
-    ripple.className =
-        "ripple";
-
-
-    ripple.style.left =
-        x + "px";
-
-
-    ripple.style.top =
-        y + "px";
-
-
-    document.body.appendChild(
-        ripple
-    );
-
-
-    setTimeout(
-        function(){
-
-            ripple.remove();
-
-        },
-        700
-    );
-
-}
-
-
-/* =========================================================
-   SECRET KEYBOARD TRICKS
-========================================================= */
-
-let secretCode = "";
-
-
-document.addEventListener(
-    "keydown",
-    function(event){
-
-        secretCode +=
-            event.key.toLowerCase();
-
-
-        if(
-            secretCode.length > 15
-        ){
-
-            secretCode =
-                secretCode.slice(-15);
-
-        }
-
-
-        /* LOVE */
-
-        if(
-            secretCode.includes("love")
-        ){
-
-            pickupLine.classList.remove(
-                "pop"
-            );
-
-
-            void pickupLine.offsetWidth;
-
-
-            pickupLine.classList.add(
-                "pop"
-            );
-
-
-            pickupLine.textContent =
-                "“Bakit? Kasi love kita... ESTE! SECRET CODE LANG! 😂❤️☕”";
-
-
-            showToast(
-                "❤️ Secret Love Mode!"
-            );
-
-
-            secretCode = "";
-
-        }
-
-
-        /* COFFEE */
-
-        if(
-            secretCode.includes("coffee")
-        ){
-
-            messageBox.textContent =
-                "☕ SECRET COFFEE MODE! Alam kong kailangan mo talaga ng kape. 😂";
-
-
-            showToast(
-                "☕ Secret Coffee Mode!"
-            );
-
-
-            secretCode = "";
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   AUTO MESSAGE
-========================================================= */
-
-setInterval(
-    function(){
-
-        if(
-            Math.random() > .55
-        ){
-
-            const autoMessages = [
-
-                "☕ Reminder: Coffee break muna.",
-
-                "😌 Take a breath. You're doing fine.",
-
-                "😂 Pssst... click mo yung BAKIT.",
-
-                "❤️ Someone needs a coffee date.",
-
-                "☕ The system is still brewing..."
-
-            ];
-
-
-            messageBox.textContent =
-                autoMessages[
-                    Math.floor(
-                        Math.random() *
-                        autoMessages.length
-                    )
-                ];
-
-        }
-
-    },
-    12000
-);
+},2500);
 
 </script>
 
 </body>
-
 </html>
